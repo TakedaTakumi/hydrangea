@@ -1,0 +1,36 @@
+{
+  "recentFiles": [
+    {
+      "basename": "Scenario.yaml",
+      "path": "docs/SampleDataModel/Scenario.yaml.md"
+    },
+    {
+      "basename": "PageDesign.yaml",
+      "path": "docs/SampleDataModel/PageDesign.yaml.md"
+    },
+    {
+      "basename": "IFDAM図サンプル",
+      "path": "メモ/IFDAM図サンプル.md"
+    },
+    {
+      "basename": "PageDesign.yaml",
+      "path": "ツール/Hydrangea/要件定義/DataModel/PageDesign.yaml.md"
+    },
+    {
+      "basename": "Scenario.yaml",
+      "path": "ツール/Hydrangea/要件定義/DataModel/Scenario.yaml.md"
+    },
+    {
+      "basename": "ドキュメントサンプル（スタイルあり）",
+      "path": "ツール/Hydrangea/ドキュメントサンプル（スタイルあり）.md"
+    },
+    {
+      "basename": "ブログ下書き",
+      "path": "メモ/ブログ下書き.md"
+    }
+  ],
+  "omittedPaths": [],
+  "omittedTags": [],
+  "updateOn": "file-open",
+  "omitBookmarks": false
+}
