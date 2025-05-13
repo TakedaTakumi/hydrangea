@@ -1,6 +1,14 @@
 {
   "recentFiles": [
     {
+      "basename": "Scenario.yaml",
+      "path": "docs/SampleDataModel/Scenario.yaml.md"
+    },
+    {
+      "basename": "PageDesign.yaml",
+      "path": "docs/SampleDataModel/PageDesign.yaml.md"
+    },
+    {
       "basename": "IFDAM図サンプル",
       "path": "メモ/IFDAM図サンプル.md"
     },

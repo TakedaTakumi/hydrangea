@@ -4,17 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "39995da0086d86bd",
+        "id": "03be85e92f595e1a",
         "type": "tabs",
         "children": [
           {
-            "id": "9aaf227612a8493b",
+            "id": "0172c2937ccf22fb",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "docs/SampleDataModel/Scenario.yaml.md",
+                "mode": "source",
+                "source": true
+              },
               "icon": "lucide-file",
-              "title": "新規タブ"
+              "title": "Scenario.yaml"
             }
           }
         ]
@@ -166,8 +170,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "9aaf227612a8493b",
+  "active": "c4a71211b7bdeb1f",
   "lastOpenFiles": [
+    "docs/SampleDataModel/PageDesign.yaml.md",
+    "docs/SampleDataModel/Scenario.yaml.md",
     "docs/SampleDataModel/Scenario.yaml",
     "docs/SampleDataModel/PageDesign.yaml",
     "docs/SampleDataModel",
@@ -199,10 +205,8 @@
     "ツール/Hydrangea/要件定義/PageDesign.toml.md",
     "ツール/Hydrangea/要件定義/PageDesign.yaml.md",
     "ツール/Hydrangea/要件定義/PageDesign.yaml",
-    "ツール/Hydrangea/要件定義/PageDesign.toml",
     "ツール/Hydrangea/01_core/概要.md",
     "ツール/Hydrangea/01_core/シーケンス図.md",
-    "ツール/Hydrangea/01_core/オブジェクト定義.md",
-    "ラーニングログ/［入門］ドメイン駆動設計.md"
+    "ツール/Hydrangea/01_core/オブジェクト定義.md"
   ]
 }
