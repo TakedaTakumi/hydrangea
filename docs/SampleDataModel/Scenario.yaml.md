@@ -1,3 +1,6 @@
+# ユースケースのYAML形式
+
+```yaml
 actors:
   - name: ユーザー
 
@@ -77,3 +80,5 @@ use_cases:
     summary: マインドマップ内のノードを選択または選択解除する。
     pre-conditions: マインドマップが存在する。
     post-conditions: 指定したノードが選択または選択解除される。
+```
+

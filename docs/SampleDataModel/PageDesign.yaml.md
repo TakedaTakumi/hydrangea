@@ -1,3 +1,6 @@
+# 画面設計のYAML形式
+
+```yaml
 Home:
   Overview: アプリケーションのエントリーポイントとなる画面。
   Elements:
@@ -88,3 +91,5 @@ Help:
     Input: []
     Control: []
   Events: []
+```
+
