@@ -1,0 +1,114 @@
+{
+  "main": {
+    "id": "1d1c39f9ee76bada",
+    "type": "split",
+    "children": [
+      {
+        "id": "a081980821a735ad",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "ツール/プログラミングエンジン/メモ.md",
+            "mode": "source",
+            "source": true
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "a0a381b329706f21",
+    "type": "split",
+    "children": [
+      {
+        "id": "b87c7e897ce7d9bb",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7025487ace052b68",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "ccde75bd5615f9d4",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "24662fe5d9df3ef3",
+    "type": "split",
+    "children": [
+      {
+        "id": "8c24c8bac99b093b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3c88ff8b4e70fd47",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "ツール/プログラミングエンジン/メモ.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "6b501862d00efa8f",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "a081980821a735ad",
+  "lastOpenFiles": [
+    "ツール/プログラミングエンジン/メモ.md",
+    "ツール/プログラミングエンジン/参考サイトバックアップ.md",
+    "ツール/プログラミングエンジン/パーサコンビネータ.md",
+    "ツール/プログラミングエンジン/チケット案.md",
+    "ツール/プログラミングエンジン/DB構文定義.md",
+    "ツール/SlideWiki/メモ.md",
+    "ツール/prisma-diagram/メモ.md",
+    "ツール/PrismaDiagram/メモ.md",
+    "ツール/syspec-core/概要.md",
+    "ツール/syspec-core/システム設計.md"
+  ]
+}
