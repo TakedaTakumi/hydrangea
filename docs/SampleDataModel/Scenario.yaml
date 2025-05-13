@@ -1,0 +1,79 @@
+actors:
+  - name: ユーザー
+
+use_cases:
+  - name: マインドマップの作成
+    actor: ユーザー
+    summary: 新しいマインドマップを作成する。
+    pre-conditions: なし
+    post-conditions: 空のマインドマップが作成される。
+    steps:
+      - アプリケーションのメニューから「新規作成」を選択する。
+
+  - name: ノードの追加
+    actor: ユーザー
+    summary: マインドマップに新しいノードを追加する。
+    pre-conditions: マインドマップが存在する。
+    post-conditions: 指定した位置にノードが追加される。
+    steps:
+      - ノードを追加したい位置を選択し、右クリックメニューから「ノード追加」を選択する。
+
+  - name: ノードの削除
+    actor: ユーザー
+    summary: マインドマップからノードを削除する。
+    pre-conditions: 削除対象のノードが存在する。
+    post-conditions: 指定したノードが削除される。
+    steps:
+      - 削除したいノードを選択し、右クリックメニューから「削除」を選択する。
+
+  - name: ノードの移動
+    actor: ユーザー
+    summary: ノードを別の位置に移動する。
+    pre-conditions: 移動対象のノードが存在する。
+    post-conditions: ノードが指定した位置に移動される。
+    steps:
+      - 移動したいノードをドラッグして、目的の位置にドロップする。
+
+  - name: ノードへのテキスト追加
+    actor: ユーザー
+    summary: ノードにテキストを追加する。
+    pre-conditions: 対象のノードが存在する。
+    post-conditions: ノードにテキストが追加される。
+    steps:
+      - テキストを追加したいノードをダブルクリックし、テキストを入力する。
+
+  - name: ノードの色変更
+    actor: ユーザー
+    summary: ノードの色を変更する。
+    pre-conditions: 対象のノードが存在する。
+    post-conditions: ノードの色が変更される。
+
+  - name: ノードの折りたたみ・展開
+    actor: ユーザー
+    summary: ノードを折りたたむ、または展開する。
+    pre-conditions: 対象のノードが存在する。
+    post-conditions: ノードが折りたたまれる、または展開される。
+
+  - name: テキストファイルのインポート
+    actor: ユーザー
+    summary: テキストファイルをインポートしてマインドマップを生成する。
+    pre-conditions: インポートするファイルが存在する。
+    post-conditions: ファイルの内容がマインドマップに反映される。
+
+  - name: テキストファイルのエクスポート
+    actor: ユーザー
+    summary: マインドマップをテキストファイルとしてエクスポートする。
+    pre-conditions: エクスポートするマインドマップが存在する。
+    post-conditions: マインドマップがテキストファイルとして保存される。
+
+  - name: キーボードショートカットの利用
+    actor: ユーザー
+    summary: キーボードショートカットを使用して操作を効率化する。
+    pre-conditions: ショートカットが設定されている。
+    post-conditions: ショートカットに対応した操作が実行される。
+
+  - name: ノードの選択・選択解除
+    actor: ユーザー
+    summary: マインドマップ内のノードを選択または選択解除する。
+    pre-conditions: マインドマップが存在する。
+    post-conditions: 指定したノードが選択または選択解除される。
