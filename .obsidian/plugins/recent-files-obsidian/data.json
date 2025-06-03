@@ -1,6 +1,26 @@
 {
   "recentFiles": [
     {
+      "basename": "MaindMap.yaml",
+      "path": "docs/SampleDataModel/MaindMap.yaml.md"
+    },
+    {
+      "basename": "screen",
+      "path": "docs/RequirementsDefinition/screen.md"
+    },
+    {
+      "basename": "scenario",
+      "path": "docs/RequirementsDefinition/scenario.md"
+    },
+    {
+      "basename": "requirement",
+      "path": "docs/RequirementsDefinition/requirement.md"
+    },
+    {
+      "basename": "request",
+      "path": "docs/RequirementsDefinition/request.md"
+    },
+    {
       "basename": "Scenario.yaml",
       "path": "docs/SampleDataModel/Scenario.yaml.md"
     },
