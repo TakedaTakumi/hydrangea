@@ -1,0 +1,7 @@
+services:
+  hydrangea:
+    image: oven/bun:latest
+    volumes:
+      - .:/app
+    tty: true
+    working_dir: /app
