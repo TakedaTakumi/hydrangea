@@ -7,7 +7,7 @@
 ## 想定するプロジェクト構成
 
 ```
-mindmap-tool/
+mindmap-simple-tool/
 ├── index.html                      # メインHTML
 ├── README.md                       # プロジェクト説明
 ├── package.json                    # 開発依存関係（オプション）
