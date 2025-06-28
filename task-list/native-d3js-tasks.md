@@ -156,15 +156,15 @@ mindmap-simple-tool/
   - [x] README.md の作成
   - [x] .gitignore の設定（node_modules、dist、bun.lockb、output.css を含める）
   - [x] bunfig.toml の設定（オプション）
-- [ ] パッケージ・ライブラリ導入
-  - [ ] `bun add -d typescript @types/node` で TypeScript 環境設定
-  - [ ] `bun add -d tailwindcss postcss autoprefixer` で Tailwind 導入
-  - [ ] `bun add -d @tailwindcss/forms @tailwindcss/typography` でプラグイン導入
-  - [ ] `bun add d3` で d3.js 導入
-  - [ ] `bun add -d @types/d3` で型定義導入
-  - [ ] `bun add js-yaml && bun add -d @types/js-yaml` で YAML ライブラリ導入
-  - [ ] `bun add html2canvas`（オプション、画像エクスポート用）
-  - [ ] `bun add -d eslint prettier concurrently`（開発ツール）
+- [x] パッケージ・ライブラリ導入
+  - [x] `bun add -d typescript @types/node` で TypeScript 環境設定
+  - [x] `bun add -d tailwindcss postcss autoprefixer` で Tailwind 導入
+  - [x] `bun add -d @tailwindcss/forms @tailwindcss/typography` でプラグイン導入
+  - [x] `bun add d3` で d3.js 導入
+  - [x] `bun add -d @types/d3` で型定義導入
+  - [x] `bun add js-yaml && bun add -d @types/js-yaml` で YAML ライブラリ導入
+  - [x] `bun add html2canvas`（オプション、画像エクスポート用）
+  - [x] `bun add -d eslint prettier concurrently`（開発ツール）
 - [ ] 設定ファイルの作成
   - [ ] tsconfig.json の作成（Bun 最適化設定）
   - [ ] `bunx tailwindcss init -p` で Tailwind 設定ファイル生成
