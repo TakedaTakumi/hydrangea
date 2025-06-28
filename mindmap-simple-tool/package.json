@@ -1,8 +1,20 @@
 {
   "name": "mindmap-simple-tool",
-  "module": "index.ts",
+  "module": "src/main.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "dev": "concurrently \"bun css:watch\" \"bun run --watch src/main.ts\"",
+    "css:watch": "tailwindcss -i public/css/input.css -o public/css/output.css --watch",
+    "css:build": "tailwindcss -i public/css/input.css -o public/css/output.css --minify",
+    "build": "bun css:build && bun build src/main.ts --outdir dist --minify --splitting --target browser",
+    "preview": "bun run build && bun serve dist",
+    "test": "bun test",
+    "lint": "eslint src --ext .ts,.js",
+    "lint:fix": "eslint src --ext .ts,.js --fix",
+    "format": "prettier --write \"src/**/*.{ts,js,json,md}\"",
+    "type-check": "tsc --noEmit"
+  },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.16",

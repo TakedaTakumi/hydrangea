@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     // Environment setup & latest features
-    "lib": ["ESNext"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "target": "ESNext",
     "module": "Preserve",
     "moduleDetection": "force",
@@ -21,9 +21,34 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
 
-    // Some stricter flags (disabled by default)
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false
-  }
+    // Enable stricter flags for better code quality
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+
+    // Path mapping for clean imports
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/types/*": ["./src/types/*"],
+      "@/core/*": ["./src/core/*"],
+      "@/mindmap/*": ["./src/mindmap/*"],
+      "@/ui/*": ["./src/ui/*"],
+      "@/features/*": ["./src/features/*"],
+      "@/utils/*": ["./src/utils/*"],
+      "@/config/*": ["./src/config/*"]
+    },
+
+    // For d3.js and web APIs
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+
+    // Use pre-bundled types for packages which ship TypeScript declarations
+    "types": ["bun-types"]
+  },
+  "include": ["src/**/*", "index.html", "public/**/*"],
+  "exclude": ["node_modules", "dist", "tests/**/*"]
 }

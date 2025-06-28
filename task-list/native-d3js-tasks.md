@@ -165,22 +165,22 @@ mindmap-simple-tool/
   - [x] `bun add js-yaml && bun add -d @types/js-yaml` で YAML ライブラリ導入
   - [x] `bun add html2canvas`（オプション、画像エクスポート用）
   - [x] `bun add -d eslint prettier concurrently`（開発ツール）
-- [ ] 設定ファイルの作成
-  - [ ] tsconfig.json の作成（Bun 最適化設定）
-  - [ ] `bunx tailwindcss init -p` で Tailwind 設定ファイル生成
-  - [ ] tailwind.config.js の詳細設定
-    - [ ] content パスの設定（HTML、TypeScript ファイルを対象）
-    - [ ] カスタムカラーパレットの定義（マインドマップ用）
-    - [ ] カスタムフォントサイズ、間隔の定義
-    - [ ] ダークモード設定（'class' ストラテジー）
-    - [ ] プラグインの有効化
-  - [ ] package.json スクリプトの設定
-    - [ ] `css:watch` で Tailwind ウォッチモード
-    - [ ] `css:build` で Tailwind 本番ビルド
-    - [ ] `dev` で並行開発サーバー起動（CSS ウォッチ + TS コンパイル）
-    - [ ] `build` でビルド実行（Tailwind + Bun バンドラー）
-    - [ ] `preview` でビルド結果プレビュー
-    - [ ] `test` でテスト実行（Bun 内蔵テストランナー）
+- [x] 設定ファイルの作成
+  - [x] tsconfig.json の作成（Bun 最適化設定）
+  - [x] `bunx tailwindcss init -p` で Tailwind 設定ファイル生成
+  - [x] tailwind.config.js の詳細設定
+    - [x] content パスの設定（HTML、TypeScript ファイルを対象）
+    - [x] カスタムカラーパレットの定義（マインドマップ用）
+    - [x] カスタムフォントサイズ、間隔の定義
+    - [x] ダークモード設定（'class' ストラテジー）
+    - [x] プラグインの有効化
+  - [x] package.json スクリプトの設定
+    - [x] `css:watch` で Tailwind ウォッチモード
+    - [x] `css:build` で Tailwind 本番ビルド
+    - [x] `dev` で並行開発サーバー起動（CSS ウォッチ + TS コンパイル）
+    - [x] `build` でビルド実行（Tailwind + Bun バンドラー）
+    - [x] `preview` でビルド結果プレビュー
+    - [x] `test` でテスト実行（Bun 内蔵テストランナー）
 - [ ] ファイル構造の作成
   - [ ] index.html の作成（3 ペインレイアウト、Tailwind クラス使用）
   - [ ] TypeScript モジュールの構成（src/ 配下に配置）
