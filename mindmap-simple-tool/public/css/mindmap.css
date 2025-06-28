@@ -1,0 +1,375 @@
+/* Mindmap-specific styles for SVG elements and d3.js components */
+
+/* SVG Node Styles */
+.mindmap-node {
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.mindmap-node:hover {
+  filter: brightness(1.1);
+  transform: scale(1.02);
+}
+
+.mindmap-node.selected {
+  filter: brightness(1.2);
+  stroke: #3b82f6;
+  stroke-width: 2px;
+}
+
+.mindmap-node.editing {
+  stroke: #10b981;
+  stroke-width: 2px;
+  stroke-dasharray: 4, 2;
+}
+
+/* Node Text Styles */
+.mindmap-node-text {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  fill: currentColor;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+  user-select: none;
+}
+
+.mindmap-node-text.large {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.mindmap-node-text.small {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* Edge/Link Styles */
+.mindmap-edge {
+  fill: none;
+  stroke: #6b7280;
+  stroke-width: 2px;
+  transition: all 0.2s ease-in-out;
+}
+
+.mindmap-edge:hover {
+  stroke: #4b5563;
+  stroke-width: 3px;
+}
+
+.mindmap-edge.highlighted {
+  stroke: #3b82f6;
+  stroke-width: 3px;
+}
+
+.mindmap-edge.dashed {
+  stroke-dasharray: 5, 5;
+}
+
+/* Dark mode edge styles */
+.dark .mindmap-edge {
+  stroke: #9ca3af;
+}
+
+.dark .mindmap-edge:hover {
+  stroke: #d1d5db;
+}
+
+.dark .mindmap-edge.highlighted {
+  stroke: #60a5fa;
+}
+
+/* Animation Classes */
+.node-enter {
+  opacity: 0;
+  transform: scale(0.1);
+  animation: nodeEnter 0.4s ease-out forwards;
+}
+
+.node-exit {
+  animation: nodeExit 0.3s ease-in forwards;
+}
+
+.edge-enter {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: edgeEnter 0.6s ease-out forwards;
+}
+
+.edge-exit {
+  animation: edgeExit 0.3s ease-in forwards;
+}
+
+@keyframes nodeEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.1);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes nodeExit {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.1);
+  }
+}
+
+@keyframes edgeEnter {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes edgeExit {
+  to {
+    opacity: 0;
+  }
+}
+
+/* Node Shape Variants */
+.node-shape-rect {
+  rx: 4;
+  ry: 4;
+}
+
+.node-shape-rounded {
+  rx: 12;
+  ry: 12;
+}
+
+.node-shape-circle {
+  rx: 50%;
+  ry: 50%;
+}
+
+/* Node Color Variants */
+.node-color-blue {
+  fill: #3b82f6;
+  color: white;
+}
+
+.node-color-green {
+  fill: #10b981;
+  color: white;
+}
+
+.node-color-red {
+  fill: #ef4444;
+  color: white;
+}
+
+.node-color-yellow {
+  fill: #f59e0b;
+  color: white;
+}
+
+.node-color-purple {
+  fill: #8b5cf6;
+  color: white;
+}
+
+.node-color-gray {
+  fill: #6b7280;
+  color: white;
+}
+
+.node-color-pink {
+  fill: #ec4899;
+  color: white;
+}
+
+.node-color-indigo {
+  fill: #6366f1;
+  color: white;
+}
+
+/* Drag and Drop States */
+.node-dragging {
+  opacity: 0.7;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.drop-target {
+  stroke: #10b981;
+  stroke-width: 3px;
+  stroke-dasharray: 8, 4;
+  animation: dropTargetPulse 1s ease-in-out infinite;
+}
+
+@keyframes dropTargetPulse {
+  0%,
+  100% {
+    stroke-opacity: 0.7;
+  }
+  50% {
+    stroke-opacity: 1;
+  }
+}
+
+/* Selection Rectangle */
+.selection-rect {
+  fill: rgba(59, 130, 246, 0.1);
+  stroke: #3b82f6;
+  stroke-width: 1px;
+  stroke-dasharray: 4, 2;
+}
+
+/* Minimap Styles */
+.minimap-viewport {
+  fill: rgba(59, 130, 246, 0.2);
+  stroke: #3b82f6;
+  stroke-width: 1px;
+  cursor: move;
+}
+
+.minimap-node {
+  fill: #6b7280;
+  stroke: none;
+}
+
+.minimap-edge {
+  stroke: #9ca3af;
+  stroke-width: 1px;
+}
+
+/* Context Menu Enhancements */
+.context-menu-enter {
+  animation: contextMenuEnter 0.15s ease-out;
+}
+
+@keyframes contextMenuEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Loading States */
+.canvas-loading {
+  background: radial-gradient(
+    circle,
+    rgba(59, 130, 246, 0.1) 0%,
+    transparent 70%
+  );
+  animation: loadingPulse 2s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Accessibility Enhancements */
+.mindmap-node:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.mindmap-edge:focus {
+  stroke: #3b82f6;
+  stroke-width: 3px;
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .mindmap-edge {
+    stroke-width: 3px;
+  }
+
+  .mindmap-node {
+    stroke-width: 2px;
+    stroke: #000;
+  }
+
+  .dark .mindmap-node {
+    stroke: #fff;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .mindmap-node,
+  .mindmap-edge {
+    transition: none;
+  }
+
+  .node-enter,
+  .node-exit,
+  .edge-enter,
+  .edge-exit {
+    animation: none;
+  }
+
+  .drop-target {
+    animation: none;
+  }
+
+  .canvas-loading {
+    animation: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .mindmap-canvas {
+    background: white !important;
+  }
+
+  .mindmap-node {
+    filter: none !important;
+  }
+
+  .mindmap-edge {
+    stroke: #000 !important;
+  }
+
+  .mindmap-node-text {
+    fill: #000 !important;
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .mindmap-node-text {
+    font-size: 12px;
+  }
+
+  .mindmap-node-text.large {
+    font-size: 14px;
+  }
+
+  .mindmap-edge {
+    stroke-width: 1.5px;
+  }
+}
+
+/* Touch Device Enhancements */
+@media (pointer: coarse) {
+  .mindmap-node {
+    cursor: default;
+  }
+
+  .mindmap-node:hover {
+    transform: none;
+  }
+}

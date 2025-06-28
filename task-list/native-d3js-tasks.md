@@ -181,13 +181,13 @@ mindmap-simple-tool/
     - [x] `build` でビルド実行（Tailwind + Bun バンドラー）
     - [x] `preview` でビルド結果プレビュー
     - [x] `test` でテスト実行（Bun 内蔵テストランナー）
-- [ ] ファイル構造の作成
-  - [ ] index.html の作成（3 ペインレイアウト、Tailwind クラス使用）
-  - [ ] TypeScript モジュールの構成（src/ 配下に配置）
-  - [ ] CSS ファイルの構成
-    - [ ] public/css/input.css の作成（@tailwind ディレクティブ）
-    - [ ] public/css/components.css の作成（@apply ディレクティブ用）
-    - [ ] public/css/mindmap.css の作成（特殊スタイル用）
+- [x] ファイル構造の作成
+  - [x] index.html の作成（3 ペインレイアウト、Tailwind クラス使用）
+  - [x] TypeScript モジュールの構成（src/ 配下に配置）
+  - [x] CSS ファイルの構成
+    - [x] public/css/input.css の作成（@tailwind ディレクティブ）
+    - [x] public/css/components.css の作成（@apply ディレクティブ用）
+    - [x] public/css/mindmap.css の作成（特殊スタイル用）
 - [ ] 開発環境の最終設定
   - [ ] ESLint + Prettier の設定
   - [ ] VS Code Tailwind CSS IntelliSense の有効化

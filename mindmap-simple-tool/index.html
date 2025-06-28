@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ja" class="h-full">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>マインドマップ Web ツール</title>
+  <meta name="description" content="Bun + TypeScript + Tailwind CSS + d3.js で作成されたマインドマップ Web ツール">
+
+  <!-- Tailwind CSS -->
+  <link href="./public/css/output.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link href="./public/css/components.css" rel="stylesheet">
+  <link href="./public/css/mindmap.css" rel="stylesheet">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="./public/icons/ui/favicon.svg">
+
+  <!-- Preload fonts for better performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+</head>
+
+<body
+  class="h-full bg-mindmap-background dark:bg-mindmap-background-dark text-gray-900 dark:text-gray-100 font-sans antialiased">
+  <!-- Application Container -->
+  <div id="app" class="h-full flex flex-col">
+
+    <!-- Header / Toolbar -->
+    <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-soft">
+      <div class="flex justify-between items-center px-4 py-3">
+        <!-- Left: Logo and Title -->
+        <div class="flex items-center space-x-3">
+          <div
+            class="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                clip-rule="evenodd" />
+            </svg>
+          </div>
+          <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
+            マインドマップ
+          </h1>
+        </div>
+
+        <!-- Center: Main Toolbar -->
+        <div class="flex items-center space-x-2">
+          <!-- File Operations -->
+          <div class="flex items-center space-x-1 bg-gray-50 dark:bg-gray-700 rounded-lg p-1">
+            <button id="btn-new" class="btn-toolbar" title="新規作成 (Ctrl+N)">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+            </button>
+            <button id="btn-open" class="btn-toolbar" title="ファイルを開く (Ctrl+O)">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-5l-2-2H5a2 2 0 00-2 2z" />
+              </svg>
+            </button>
+            <button id="btn-save" class="btn-toolbar" title="保存 (Ctrl+S)">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Divider -->
+          <div class="w-px h-6 bg-gray-300 dark:bg-gray-600"></div>
+
+          <!-- Edit Operations -->
+          <div class="flex items-center space-x-1 bg-gray-50 dark:bg-gray-700 rounded-lg p-1">
+            <button id="btn-undo" class="btn-toolbar" title="元に戻す (Ctrl+Z)">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+              </svg>
+            </button>
+            <button id="btn-redo" class="btn-toolbar" title="やり直し (Ctrl+Y)">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 10h-10a8 8 0 00-8 8v2m18-10l-6-6m6 6l-6 6" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Divider -->
+          <div class="w-px h-6 bg-gray-300 dark:bg-gray-600"></div>
+
+          <!-- View Operations -->
+          <div class="flex items-center space-x-1 bg-gray-50 dark:bg-gray-700 rounded-lg p-1">
+            <button id="btn-zoom-out" class="btn-toolbar" title="ズームアウト (-)">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" />
+              </svg>
+            </button>
+            <button id="btn-zoom-reset" class="btn-toolbar" title="100%表示 (0)">
+              <span class="text-xs font-mono">100%</span>
+            </button>
+            <button id="btn-zoom-in" class="btn-toolbar" title="ズームイン (+)">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+              </svg>
+            </button>
+            <button id="btn-fit-view" class="btn-toolbar" title="全体表示 (Home)">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Settings and Theme -->
+        <div class="flex items-center space-x-2">
+          <!-- Theme Toggle -->
+          <button id="btn-theme-toggle" class="btn-toolbar" title="ダークモード切り替え">
+            <svg class="w-4 h-4 hidden dark:block" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                clip-rule="evenodd" />
+            </svg>
+            <svg class="w-4 h-4 block dark:hidden" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+            </svg>
+          </button>
+
+          <!-- Settings -->
+          <button id="btn-settings" class="btn-toolbar" title="設定">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area: 3-Pane Layout -->
+    <main class="flex-1 grid grid-cols-[280px_1fr_320px] lg:grid-cols-[280px_1fr] md:grid-cols-1 min-h-0">
+
+      <!-- Left Pane: Hierarchy/Tree View -->
+      <aside id="hierarchy-panel" class="sidebar-panel overflow-hidden flex flex-col md:hidden">
+        <!-- Panel Header -->
+        <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 class="text-sm font-semibold text-gray-700 dark:text-gray-300">階層表示</h2>
+          <button id="btn-collapse-all" class="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded" title="すべて折りたたみ">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Tree Content -->
+        <div id="hierarchy-tree" class="flex-1 overflow-auto p-2">
+          <!-- Tree nodes will be dynamically inserted here -->
+          <div class="text-sm text-gray-500 dark:text-gray-400 text-center py-8">
+            マインドマップを作成してください
+          </div>
+        </div>
+
+        <!-- Panel Footer -->
+        <div class="p-3 border-t border-gray-200 dark:border-gray-700">
+          <button id="btn-add-root" class="btn-secondary w-full">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            ルートノード追加
+          </button>
+        </div>
+      </aside>
+
+      <!-- Center Pane: Mindmap Canvas -->
+      <section id="mindmap-container" class="relative bg-white dark:bg-gray-900 overflow-hidden">
+        <!-- Canvas Loading State -->
+        <div id="canvas-loading" class="absolute inset-0 flex items-center justify-center bg-white dark:bg-gray-900">
+          <div class="text-center">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500 mx-auto mb-4"></div>
+            <p class="text-sm text-gray-500 dark:text-gray-400">マインドマップを初期化中...</p>
+          </div>
+        </div>
+
+        <!-- Main SVG Canvas -->
+        <svg id="mindmap-canvas" class="w-full h-full absolute inset-0 hidden">
+          <!-- Background pattern -->
+          <defs>
+            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#f3f4f6" stroke-width="1" opacity="0.5" />
+            </pattern>
+            <pattern id="grid-dark" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#374151" stroke-width="1" opacity="0.3" />
+            </pattern>
+          </defs>
+
+          <!-- Background -->
+          <rect width="100%" height="100%" fill="url(#grid)" class="dark:fill-[url(#grid-dark)]" />
+
+          <!-- Main group for zoom/pan transforms -->
+          <g id="mindmap-group">
+            <!-- Links/edges will be drawn here -->
+            <g id="links-group"></g>
+            <!-- Nodes will be drawn here -->
+            <g id="nodes-group"></g>
+          </g>
+        </svg>
+
+        <!-- Canvas Overlay UI -->
+        <div id="canvas-overlay" class="absolute inset-0 pointer-events-none">
+          <!-- Minimap -->
+          <div id="minimap"
+            class="absolute bottom-4 right-4 w-32 h-24 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-medium pointer-events-auto">
+            <svg class="w-full h-full rounded-lg"></svg>
+          </div>
+
+          <!-- Canvas Info -->
+          <div id="canvas-info"
+            class="absolute bottom-4 left-4 text-xs text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 px-2 py-1 rounded shadow">
+            ズーム: <span id="zoom-level">100%</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Pane: Node Details/Properties -->
+      <aside id="detail-panel" class="sidebar-panel overflow-hidden flex flex-col lg:hidden">
+        <!-- Panel Header -->
+        <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 class="text-sm font-semibold text-gray-700 dark:text-gray-300">プロパティ</h2>
+          <button id="btn-panel-close" class="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded lg:hidden"
+            title="パネルを閉じる">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Panel Content -->
+        <div id="detail-content" class="flex-1 overflow-auto">
+          <!-- No Selection State -->
+          <div id="no-selection" class="p-4 text-center text-gray-500 dark:text-gray-400">
+            <svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+            </svg>
+            <p class="text-sm">ノードを選択してください</p>
+          </div>
+
+          <!-- Node Properties Form -->
+          <div id="node-properties" class="p-4 space-y-6 hidden">
+            <!-- Node Text -->
+            <div class="space-y-2">
+              <label for="node-text" class="block text-sm font-medium text-gray-700 dark:text-gray-300">テキスト</label>
+              <textarea id="node-text" rows="3" class="input-field resize-none" placeholder="ノードのテキストを入力..."></textarea>
+            </div>
+
+            <!-- Node Style -->
+            <div class="space-y-4">
+              <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">スタイル</h3>
+
+              <!-- Color Picker -->
+              <div class="space-y-2">
+                <label class="block text-sm text-gray-600 dark:text-gray-400">背景色</label>
+                <div id="color-palette" class="grid grid-cols-6 gap-2">
+                  <!-- Color buttons will be dynamically inserted -->
+                </div>
+              </div>
+
+              <!-- Shape Selection -->
+              <div class="space-y-2">
+                <label class="block text-sm text-gray-600 dark:text-gray-400">形状</label>
+                <div class="flex space-x-2">
+                  <button class="shape-btn active" data-shape="rect">
+                    <div class="w-6 h-4 bg-current rounded"></div>
+                  </button>
+                  <button class="shape-btn" data-shape="circle">
+                    <div class="w-5 h-5 bg-current rounded-full"></div>
+                  </button>
+                  <button class="shape-btn" data-shape="rounded">
+                    <div class="w-6 h-4 bg-current rounded-lg"></div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Font Size -->
+              <div class="space-y-2">
+                <label for="font-size" class="block text-sm text-gray-600 dark:text-gray-400">フォントサイズ</label>
+                <select id="font-size" class="input-field">
+                  <option value="xs">極小 (12px)</option>
+                  <option value="sm">小 (14px)</option>
+                  <option value="base" selected>標準 (16px)</option>
+                  <option value="lg">大 (18px)</option>
+                  <option value="xl">特大 (20px)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Node Actions -->
+            <div class="space-y-2 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <button id="btn-add-child" class="btn-secondary w-full">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                子ノード追加
+              </button>
+              <button id="btn-add-sibling" class="btn-secondary w-full">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                兄弟ノード追加
+              </button>
+              <button id="btn-delete-node" class="btn-danger w-full">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                ノード削除
+              </button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Context Menu -->
+  <div id="context-menu"
+    class="fixed hidden z-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-strong py-1 min-w-48">
+    <!-- Context menu items will be dynamically inserted -->
+  </div>
+
+  <!-- Modal Dialogs -->
+  <div id="modal-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40">
+    <!-- Modals will be dynamically inserted -->
+  </div>
+
+  <!-- Notifications Container -->
+  <div id="notifications" class="fixed top-4 right-4 z-50 space-y-2">
+    <!-- Notifications will be dynamically inserted -->
+  </div>
+
+  <!-- File Input (Hidden) -->
+  <input type="file" id="file-input" class="hidden" accept=".yaml,.yml">
+
+  <!-- Application Scripts -->
+  <script type="module" src="./src/main.ts"></script>
+</body>
+
+</html>
