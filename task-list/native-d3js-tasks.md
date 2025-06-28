@@ -150,49 +150,48 @@ mindmap-simple-tool/
 
 ## プロジェクトセットアップ
 
-- [ ] プロジェクト構造の作成
+- [ ] プロジェクト初期化と基本構造
   - [ ] `bun init` でプロジェクト初期化
   - [ ] ディレクトリ構造の設計（上記 Bun + Tailwind 構成に従って作成）
-  - [ ] index.html の作成（3 ペインレイアウト、Tailwind クラス使用）
-  - [ ] TypeScript モジュールの構成（src/ 配下に配置）
   - [ ] README.md の作成
   - [ ] .gitignore の設定（node_modules、dist、bun.lockb、output.css を含める）
   - [ ] bunfig.toml の設定（オプション）
-- [ ] Tailwind CSS の導入と設定
+- [ ] パッケージ・ライブラリ導入
+  - [ ] `bun add -d typescript @types/node` で TypeScript 環境設定
   - [ ] `bun add -d tailwindcss postcss autoprefixer` で Tailwind 導入
   - [ ] `bun add -d @tailwindcss/forms @tailwindcss/typography` でプラグイン導入
-  - [ ] `bunx tailwindcss init -p` で設定ファイル生成
+  - [ ] `bun add d3` で d3.js 導入
+  - [ ] `bun add -d @types/d3` で型定義導入
+  - [ ] `bun add js-yaml && bun add -d @types/js-yaml` で YAML ライブラリ導入
+  - [ ] `bun add html2canvas`（オプション、画像エクスポート用）
+  - [ ] `bun add -d eslint prettier concurrently`（開発ツール）
+- [ ] 設定ファイルの作成
+  - [ ] tsconfig.json の作成（Bun 最適化設定）
+  - [ ] `bunx tailwindcss init -p` で Tailwind 設定ファイル生成
   - [ ] tailwind.config.js の詳細設定
     - [ ] content パスの設定（HTML、TypeScript ファイルを対象）
     - [ ] カスタムカラーパレットの定義（マインドマップ用）
     - [ ] カスタムフォントサイズ、間隔の定義
     - [ ] ダークモード設定（'class' ストラテジー）
     - [ ] プラグインの有効化
+  - [ ] package.json スクリプトの設定
+    - [ ] `css:watch` で Tailwind ウォッチモード
+    - [ ] `css:build` で Tailwind 本番ビルド
+    - [ ] `dev` で並行開発サーバー起動（CSS ウォッチ + TS コンパイル）
+    - [ ] `build` でビルド実行（Tailwind + Bun バンドラー）
+    - [ ] `preview` でビルド結果プレビュー
+    - [ ] `test` でテスト実行（Bun 内蔵テストランナー）
+- [ ] ファイル構造の作成
+  - [ ] index.html の作成（3 ペインレイアウト、Tailwind クラス使用）
+  - [ ] TypeScript モジュールの構成（src/ 配下に配置）
   - [ ] CSS ファイルの構成
     - [ ] public/css/input.css の作成（@tailwind ディレクティブ）
     - [ ] public/css/components.css の作成（@apply ディレクティブ用）
     - [ ] public/css/mindmap.css の作成（特殊スタイル用）
-  - [ ] package.json スクリプトの設定
-    - [ ] `css:watch` で Tailwind ウォッチモード
-    - [ ] `css:build` で Tailwind 本番ビルド
-    - [ ] `dev` で並行実行（CSS + TypeScript）
-- [ ] d3.js ライブラリの導入
-  - [ ] `bun add d3` で d3.js 導入
-  - [ ] `bun add -d @types/d3` で型定義導入
-  - [ ] `bun add js-yaml && bun add -d @types/js-yaml` で YAML ライブラリ導入
-  - [ ] `bun add html2canvas`（オプション、画像エクスポート用）
-- [ ] 開発環境の設定
-  - [ ] `bun init` でプロジェクト初期化
-  - [ ] `bun add -d typescript @types/node` で TypeScript 環境設定
-  - [ ] tsconfig.json の作成（Bun 最適化設定）
-  - [ ] package.json スクリプトの設定
-    - [ ] `bun run dev` で並行開発サーバー起動（CSS ウォッチ + TS コンパイル）
-    - [ ] `bun run build` でビルド実行（Tailwind + Bun バンドラー）
-    - [ ] `bun run preview` でビルド結果プレビュー
-    - [ ] `bun test` でテスト実行（Bun 内蔵テストランナー）
-  - [ ] bunfig.toml での詳細設定（オプション）
-  - [ ] ESLint + Prettier の設定（`bun add -d eslint prettier`）
+- [ ] 開発環境の最終設定
+  - [ ] ESLint + Prettier の設定
   - [ ] VS Code Tailwind CSS IntelliSense の有効化
+  - [ ] 開発サーバーの動作確認
 
 ## 基本画面・レイアウト実装（Tailwind CSS）
 
