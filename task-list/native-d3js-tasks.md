@@ -1,18 +1,57 @@
-# マインドマップ Web ツール開発タスクリスト（ネイティブ HTML+TS+CSS+d3.js 版）
+# マインドマップ Web ツール開発タスクリスト（Bun + ネイティブ HTML+TS+CSS+d3.js 版）
 
 ## 概要
 
-フレームワークを使わず、ネイティブ HTML+TypeScript+CSS+d3.js でマインドマップ Web ツールを開発する場合のタスクリスト。
+Bun をビルドツールとして使用し、ネイティブ HTML+TypeScript+CSS+d3.js でマインドマップ Web ツールを開発する場合のタスクリスト。最終成果物は軽量な静的 Web アプリケーション。
 
-## 想定するプロジェクト構成
+## 想定するプロジェクト構成（Bun 環境）
 
 ```
 mindmap-simple-tool/
-├── index.html                      # メインHTML
+├── package.json                    # Bun パッケージ設定
+├── bun.lockb                       # Bun ロックファイル
+├── bunfig.toml                     # Bun 設定ファイル（オプション）
+├── tsconfig.json                   # TypeScript 設定
+├── index.html                      # メイン HTML（開発用）
 ├── README.md                       # プロジェクト説明
-├── package.json                    # 開発依存関係（オプション）
-├── .gitignore                      # Git無視ファイル
-├── assets/                         # 静的アセット
+├── .gitignore                      # Git 無視ファイル
+├── src/                            # ソースコード
+│   ├── main.ts                     # アプリケーションエントリーポイント
+│   ├── types/
+│   │   ├── index.ts               # 型定義のエクスポート
+│   │   ├── node.ts                # ノード関連の型定義
+│   │   ├── mindmap.ts             # マインドマップ関連の型定義
+│   │   └── ui.ts                  # UI 関連の型定義
+│   ├── core/
+│   │   ├── state-manager.ts       # 状態管理システム
+│   │   ├── event-emitter.ts       # イベント発行・購読システム
+│   │   └── data-model.ts          # データモデル定義
+│   ├── mindmap/
+│   │   ├── mindmap-renderer.ts    # d3.js 描画メイン
+│   │   ├── node-manager.ts        # ノード操作機能
+│   │   ├── layout-manager.ts      # レイアウトアルゴリズム
+│   │   └── animation.ts           # アニメーション機能
+│   ├── ui/
+│   │   ├── toolbar.ts             # ツールバー機能
+│   │   ├── context-menu.ts        # 右クリックメニュー
+│   │   ├── hierarchy-panel.ts     # 左ペイン（ツリービュー）
+│   │   ├── detail-panel.ts        # 右ペイン（詳細設定）
+│   │   ├── modal.ts               # モーダルダイアログ
+│   │   └── notifications.ts       # 通知システム
+│   ├── features/
+│   │   ├── file-handler.ts        # ファイル操作（インポート/エクスポート）
+│   │   ├── keyboard-shortcuts.ts  # キーボードショートカット
+│   │   ├── drag-drop.ts           # ドラッグ&ドロップ
+│   │   └── zoom-pan.ts            # ズーム・パン機能
+│   ├── utils/
+│   │   ├── helpers.ts             # 汎用ユーティリティ関数
+│   │   ├── constants.ts           # 定数定義
+│   │   ├── validators.ts          # バリデーション機能
+│   │   └── yaml-parser.ts         # YAML 解析機能
+│   └── config/
+│       ├── settings.ts            # アプリケーション設定
+│       └── defaults.ts            # デフォルト値定義
+├── public/                         # 静的ファイル
 │   ├── css/
 │   │   ├── main.css               # メインスタイル
 │   │   ├── layout.css             # レイアウト専用スタイル
@@ -21,67 +60,14 @@ mindmap-simple-tool/
 │   │   └── themes/
 │   │       ├── light.css          # ライトテーマ
 │   │       └── dark.css           # ダークテーマ
-│   ├── ts/                        # TypeScript ソースファイル
-│   │   ├── main.ts                # アプリケーションエントリーポイント
-│   │   ├── types/
-│   │   │   ├── index.ts           # 型定義のエクスポート
-│   │   │   ├── node.ts            # ノード関連の型定義
-│   │   │   ├── mindmap.ts         # マインドマップ関連の型定義
-│   │   │   └── ui.ts              # UI 関連の型定義
-│   │   ├── core/
-│   │   │   ├── state-manager.ts   # 状態管理システム
-│   │   │   ├── event-emitter.ts   # イベント発行・購読システム
-│   │   │   └── data-model.ts      # データモデル定義
-│   │   ├── mindmap/
-│   │   │   ├── mindmap-renderer.ts # d3.js描画メイン
-│   │   │   ├── node-manager.ts    # ノード操作機能
-│   │   │   ├── layout-manager.ts  # レイアウトアルゴリズム
-│   │   │   └── animation.ts       # アニメーション機能
-│   │   ├── ui/
-│   │   │   ├── toolbar.ts         # ツールバー機能
-│   │   │   ├── context-menu.ts    # 右クリックメニュー
-│   │   │   ├── hierarchy-panel.ts # 左ペイン（ツリービュー）
-│   │   │   ├── detail-panel.ts    # 右ペイン（詳細設定）
-│   │   │   ├── modal.ts           # モーダルダイアログ
-│   │   │   └── notifications.ts   # 通知システム
-│   │   ├── features/
-│   │   │   ├── file-handler.ts    # ファイル操作（インポート/エクスポート）
-│   │   │   ├── keyboard-shortcuts.ts # キーボードショートカット
-│   │   │   ├── drag-drop.ts       # ドラッグ&ドロップ
-│   │   │   └── zoom-pan.ts        # ズーム・パン機能
-│   │   ├── utils/
-│   │   │   ├── helpers.ts         # 汎用ユーティリティ関数
-│   │   │   ├── constants.ts       # 定数定義
-│   │   │   ├── validators.ts      # バリデーション機能
-│   │   │   └── yaml-parser.ts     # YAML解析機能
-│   │   └── config/
-│   │       ├── settings.ts        # アプリケーション設定
-│   │       └── defaults.ts        # デフォルト値定義
-│   ├── js/                        # コンパイル済み JavaScript（dist）
-│   │   ├── main.js
-│   │   ├── core/
-│   │   ├── mindmap/
-│   │   ├── ui/
-│   │   ├── features/
-│   │   ├── utils/
-│   │   └── config/
 │   ├── icons/                      # アイコンファイル
 │   │   ├── toolbar/               # ツールバー用アイコン
-│   │   └── ui/                    # UI用アイコン
+│   │   └── ui/                    # UI 用アイコン
 │   └── fonts/                      # カスタムフォント（オプション）
-├── lib/                            # 外部ライブラリ
-│   ├── d3/
-│   │   ├── d3.min.js              # d3.js本体
-│   │   ├── d3-selection.min.js    # d3-selection
-│   │   ├── d3-zoom.min.js         # d3-zoom
-│   │   ├── d3-hierarchy.min.js    # d3-hierarchy
-│   │   ├── d3-drag.min.js         # d3-drag
-│   │   └── d3-transition.min.js   # d3-transition
-│   ├── types/                     # TypeScript 型定義ファイル
-│   │   ├── d3/                    # d3.js 型定義
-│   │   └── js-yaml.d.ts           # js-yaml 型定義
-│   ├── js-yaml.min.js             # YAML パーサー
-│   └── html2canvas.min.js         # 画像エクスポート用（オプション）
+├── dist/                           # ビルド出力（デプロイ用）
+│   ├── index.html
+│   ├── assets/
+│   └── ...
 ├── samples/                        # サンプルデータ
 │   ├── basic-mindmap.yaml         # 基本的なマインドマップ
 │   ├── complex-mindmap.yaml       # 複雑なマインドマップ
@@ -94,109 +80,130 @@ mindmap-simple-tool/
 │   ├── api-reference.md           # API リファレンス
 │   ├── architecture.md            # アーキテクチャ説明
 │   └── development-guide.md       # 開発ガイド
-├── tests/                          # テスト（オプション）
-│   ├── unit/                      # ユニットテスト
-│   ├── integration/               # 統合テスト
-│   └── e2e/                       # E2Eテスト
-└── tools/                          # 開発ツール
-    ├── tsconfig.json              # TypeScript 設定
-    ├── webpack.config.js          # webpack 設定（オプション）
-    ├── rollup.config.js           # Rollup 設定（オプション）
-    ├── build.js                   # ビルドスクリプト
-    ├── dev-server.js              # 開発サーバー
-    ├── watch.js                   # TypeScript ウォッチモード
-    └── deploy.js                  # デプロイスクリプト
+└── tests/                          # テスト（Bun 内蔵テストランナー使用）
+    ├── unit/                      # ユニットテスト
+    ├── integration/               # 統合テスト
+    └── e2e/                       # E2E テスト
 ```
 
-### 主要ファイルの役割
+### 主要ファイルの役割（Bun 環境）
+
+#### プロジェクト設定
+
+- `package.json`: Bun パッケージ管理、スクリプト定義
+- `bun.lockb`: Bun ロックファイル（自動生成）
+- `bunfig.toml`: Bun 設定ファイル（オプション）
+- `tsconfig.json`: TypeScript 設定
 
 #### HTML 構造
 
-- `index.html`: 3 ペイン構成のメインレイアウト
+- `index.html`: 3 ペイン構成のメインレイアウト（開発用）
+- `dist/index.html`: ビルド済み HTML（デプロイ用）
 
 #### CSS 構成
 
-- `main.css`: グローバルスタイル、リセット CSS
-- `layout.css`: 3 ペインレイアウト、グリッドシステム
-- `components.css`: ボタン、フォーム、モーダル等の UI コンポーネント
-- `mindmap.css`: SVG ノード、エッジ、アニメーション等のマインドマップ専用スタイル
+- `public/css/main.css`: グローバルスタイル、リセット CSS
+- `public/css/layout.css`: 3 ペインレイアウト、グリッドシステム
+- `public/css/components.css`: ボタン、フォーム、モーダル等の UI コンポーネント
+- `public/css/mindmap.css`: SVG ノード、エッジ、アニメーション等のマインドマップ専用スタイル
 
 #### TypeScript モジュール構成
 
-- **types/**: 型定義ファイル（Node、MindMap、UI 関連型）
-- **core/**: アプリケーション基盤（状態管理、イベントシステム）
-- **mindmap/**: マインドマップ描画・操作のコア機能
-- **ui/**: ユーザーインターフェース関連
-- **features/**: 特定機能（ファイル操作、ショートカット等）
-- **utils/**: 汎用ユーティリティ
-- **config/**: 設定・定数
+- **src/types/**: 型定義ファイル（Node、MindMap、UI 関連型）
+- **src/core/**: アプリケーション基盤（状態管理、イベントシステム）
+- **src/mindmap/**: マインドマップ描画・操作のコア機能
+- **src/ui/**: ユーザーインターフェース関連
+- **src/features/**: 特定機能（ファイル操作、ショートカット等）
+- **src/utils/**: 汎用ユーティリティ
+- **src/config/**: 設定・定数
 
-#### コンパイル
+#### ビルド・デプロイ
 
-- **assets/ts/**: TypeScript ソースファイル
-- **assets/js/**: コンパイル済み JavaScript ファイル
+- **src/**: TypeScript ソースファイル
+- **dist/**: Bun でビルドされた最適化済みファイル（デプロイ用）
 
-#### 外部ライブラリ
+#### 外部ライブラリ（Bun パッケージ管理）
 
-- **d3.js 関連**: 必要なモジュールのみを個別に導入
-- **型定義**: d3.js、js-yaml 等の TypeScript 型定義
-- **js-yaml**: YAML 解析用の軽量ライブラリ
-- **html2canvas**: 画像エクスポート機能（オプション）
+- **d3.js 関連**: `bun add d3` でインストール、自動バンドル
+- **型定義**: `bun add -d @types/d3` で TypeScript 型定義
+- **js-yaml**: `bun add js-yaml` で YAML 解析ライブラリ
+- **html2canvas**: `bun add html2canvas` で画像エクスポート機能（オプション）
 
-#### 開発環境
+#### 開発・テスト環境
 
 - **samples/**: テストデータ、テンプレート
 - **docs/**: 技術文書
-- **tests/**: テストコード（オプション）
-- **tools/**: TypeScript コンパイル、ビルド・デプロイツール
+- **tests/**: Bun 内蔵テストランナーでのテストコード
 
-### ファイルサイズ目安
+### ファイルサイズ目安（Bun ビルド後）
 
 - **HTML**: ~2-3KB
-- **CSS**: ~15-20KB（圧縮前）
-- **TypeScript**: ~60-80KB（圧縮前、ライブラリ除く）
-- **JavaScript（コンパイル済み）**: ~50-70KB（圧縮後、ライブラリ除く）
-- **d3.js**: ~35KB（必要モジュールのみ、圧縮済み）
-- **型定義**: ~5-10KB
-- **総サイズ**: ~110-140KB（軽量）
+- **CSS**: ~15-20KB（圧縮済み）
+- **TypeScript ソース**: ~60-80KB（開発時のみ）
+- **JavaScript（Bun バンドル済み）**: ~40-60KB（圧縮済み、ライブラリ含む）
+- **d3.js（バンドル内）**: ~25-35KB（必要モジュールのみ、Tree-shaking 済み）
+- **総サイズ**: ~80-120KB（Bun 最適化により軽量）
 
 ## プロジェクトセットアップ
 
 - [ ] プロジェクト構造の作成
-  - [ ] ディレクトリ構造の設計（上記構成に従って作成）
+  - [ ] `bun init` でプロジェクト初期化
+  - [ ] ディレクトリ構造の設計（上記 Bun 構成に従って作成）
   - [ ] index.html の作成（3 ペインレイアウトの基本構造）
+  - [ ] CSS ファイルの構成（public/css/ 配下に配置）
+  - [ ] TypeScript モジュールの構成（src/ 配下に配置）
+  - [ ] README.md の作成
+  - [ ] .gitignore の設定（node_modules、dist、bun.lockb を含める）
+  - [ ] bunfig.toml の設定（オプション）
   - [ ] CSS ファイルの構成（main.css、layout.css、components.css、mindmap.css）
   - [ ] TypeScript モジュールの構成（types、core、mindmap、ui、features、utils、config フォルダ）
   - [ ] README.md の作成
   - [ ] .gitignore の設定
 - [ ] d3.js ライブラリの導入
-  - [ ] CDN またはローカルファイルでの導入（lib/d3/ フォルダに配置）
-  - [ ] 必要な d3 モジュールのダウンロード
-    - [ ] d3-selection.min.js
-    - [ ] d3-zoom.min.js
-    - [ ] d3-hierarchy.min.js
-    - [ ] d3-drag.min.js
-    - [ ] d3-transition.min.js
-  - [ ] TypeScript 型定義の導入
-    - [ ] @types/d3 または個別型定義ファイル
-    - [ ] d3 関連モジュールの型定義設定
-  - [ ] js-yaml ライブラリの導入（lib/js-yaml.min.js）
-  - [ ] js-yaml の型定義導入（@types/js-yaml または独自定義）
-  - [ ] html2canvas の導入（オプション、画像エクスポート用）
+  - **【Bun 環境】** Bun パッケージマネージャーでの導入
+    - [ ] `bun add d3` で d3.js 導入
+    - [ ] `bun add -d @types/d3` で型定義導入
+    - [ ] `bun add js-yaml && bun add -d @types/js-yaml` で YAML ライブラリ導入
+    - [ ] `bun add html2canvas`（オプション、画像エクスポート用）
+  - **【従来環境（参考）】** CDN またはローカルファイルでの導入
+    - [ ] 必要な d3 モジュールのダウンロード
+      - [ ] d3-selection.min.js
+      - [ ] d3-zoom.min.js
+      - [ ] d3-hierarchy.min.js
+      - [ ] d3-drag.min.js
+      - [ ] d3-transition.min.js
+    - [ ] TypeScript 型定義の導入
+      - [ ] @types/d3 または個別型定義ファイル
+      - [ ] d3 関連モジュールの型定義設定
+    - [ ] js-yaml ライブラリの導入（lib/js-yaml.min.js）
+    - [ ] js-yaml の型定義導入（@types/js-yaml または独自定義）
+    - [ ] html2canvas の導入（オプション、画像エクスポート用）
 - [ ] 開発環境の設定
-  - [ ] TypeScript の設定
-    - [ ] TypeScript コンパイラのインストール（npm install typescript）
-    - [ ] tsconfig.json の作成と設定
-    - [ ] ES6 モジュール、ターゲットブラウザの設定
-    - [ ] 型チェックの厳密度設定
-  - [ ] ローカルサーバーの設定（live-server、Python http.server、Node.js serve 等）
-  - [ ] package.json の作成（開発依存関係、TypeScript 関連スクリプト定義）
-  - [ ] コンパイル・ビルドスクリプトの設定
-    - [ ] TypeScript ウォッチモード（tsc --watch）
-    - [ ] 自動ビルドスクリプト
-  - [ ] ESLint の設定（オプション、TypeScript 対応）
-  - [ ] Prettier の設定（オプション、TypeScript 対応）
-  - [ ] VS Code 設定（TypeScript デバッグ、IntelliSense 設定）
+  - **【Bun 環境】** 現代的な開発環境
+    - [ ] `bun init` でプロジェクト初期化
+    - [ ] `bun add -d typescript @types/node` で TypeScript 環境設定
+    - [ ] tsconfig.json の作成（Bun 最適化設定）
+    - [ ] package.json スクリプトの設定
+      - [ ] `bun run dev` で開発サーバー起動（Bun 内蔵）
+      - [ ] `bun run build` でビルド実行（Bun 内蔵バンドラー）
+      - [ ] `bun run preview` でビルド結果プレビュー
+      - [ ] `bun test` でテスト実行（Bun 内蔵テストランナー）
+    - [ ] bunfig.toml での詳細設定（オプション）
+    - [ ] ESLint + Prettier の設定（`bun add -d eslint prettier`）
+  - **【従来環境（参考）】** 手動セットアップ
+    - [ ] TypeScript の設定
+      - [ ] TypeScript コンパイラのインストール（npm install typescript）
+      - [ ] tsconfig.json の作成と設定
+      - [ ] ES6 モジュール、ターゲットブラウザの設定
+      - [ ] 型チェックの厳密度設定
+    - [ ] ローカルサーバーの設定（live-server、Python http.server、Node.js serve 等）
+    - [ ] package.json の作成（開発依存関係、TypeScript 関連スクリプト定義）
+    - [ ] コンパイル・ビルドスクリプトの設定
+      - [ ] TypeScript ウォッチモード（tsc --watch）
+      - [ ] 自動ビルドスクリプト
+    - [ ] ESLint の設定（オプション、TypeScript 対応）
+    - [ ] Prettier の設定（オプション、TypeScript 対応）
+    - [ ] VS Code 設定（TypeScript デバッグ、IntelliSense 設定）
 
 ## 基本画面・レイアウト実装
 
@@ -497,80 +504,196 @@ mindmap-simple-tool/
 
 ---
 
-## 開発スケジュール目安
+## 開発スケジュール目安（Bun 環境）
 
-### フェーズ 1: 基盤構築（1.5 週間）
+### フェーズ 1: 基盤構築（1 週間）
 
-- プロジェクトセットアップ
+- Bun プロジェクトセットアップ
 - TypeScript 環境設定・型定義作成
 - 基本画面・レイアウト
 - 状態管理システム基盤
 
-### フェーズ 2: コア機能実装（2 週間）
+### フェーズ 2: コア機能実装（1.5 週間）
 
 - d3.js 描画機能（TypeScript 対応）
 - 基本的なノード操作
 - ファイル操作の基本部分
 
-### フェーズ 3: 高度な機能（1-1.5 週間）
+### フェーズ 3: 高度な機能（1 週間）
 
 - キーボードショートカット
 - ユーザビリティ向上
 - ヒエラルキー表示・詳細パネル
 
-### フェーズ 4: 仕上げ・最適化（0.5-1 週間）
+### フェーズ 4: 仕上げ・最適化（0.5 週間）
 
-- テスト・デバッグ（型チェック含む）
-- パフォーマンス最適化
+- Bun テストランナーでのテスト・デバッグ
+- Bun ビルドでのパフォーマンス最適化
 - ドキュメント作成
 
-**総開発期間: 5-6 週間**
+**総開発期間: 4-4.5 週間**（Bun の高速化により短縮）
 
 ---
 
-## TypeScript 使用による変更点
+## Bun 使用による変更点
 
 ### 追加されるメリット
 
-- **型安全性**: コンパイル時エラー検出
-- **IntelliSense**: IDE での自動補完・リファクタリング支援
-- **保守性**: インターフェース定義による明確な契約
-- **ドキュメント性**: 型定義自体がドキュメントとして機能
+- **開発速度**: Bun の高速ビルド・インストール
+- **設定簡素化**: 内蔵機能により設定ファイル削減
+- **メモリ効率**: 低メモリ使用量
+- **TypeScript ネイティブサポート**: 追加設定不要
 
-### 追加される作業
+### 従来環境からの改善点
 
-- **型定義作成**: 約 0.5 週間の追加時間
-- **TypeScript 設定**: 開発環境のセットアップ時間増加
-- **ライブラリ型定義**: d3.js、js-yaml 等の型定義導入
+- **セットアップ時間**: 大幅短縮（設定が簡単）
+- **ビルド時間**: 5-10 倍高速化
+- **パッケージインストール**: 数倍高速化
+- **開発サーバー**: より高速で安定
 
-### 推奨 TypeScript 設定例
+### 推奨 Bun + TypeScript 設定例
+
+#### package.json スクリプト
 
 ```json
-// tsconfig.json
+{
+  "scripts": {
+    "dev": "bun run --watch src/main.ts",
+    "build": "bun build src/main.ts --outdir dist --minify --splitting --target browser",
+    "preview": "bun run build && bun serve dist",
+    "test": "bun test",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write src"
+  }
+}
+```
+
+#### tsconfig.json（Bun 最適化）
+
+```json
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "ES2020",
-    "moduleResolution": "node",
-    "lib": ["DOM", "ES2020"],
-    "outDir": "./assets/js",
-    "rootDir": "./assets/ts",
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "lib": ["DOM", "ES2022"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "types": ["bun-types"]
   },
-  "include": ["assets/ts/**/*"],
-  "exclude": ["node_modules", "assets/js/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
+```
+
+#### bunfig.toml（オプション）
+
+```toml
+[install]
+cache = true
+exact = true
+
+[dev]
+port = 3000
+
+[build]
+target = "browser"
+format = "esm"
+minify = true
+splitting = true
 ```
 
 ---
 
-## 優先度
+## Bun 環境での開発メリット
 
-- **高**: プロジェクトセットアップ、TypeScript 環境設定、型定義作成、状態管理、d3.js 描画機能、基本ノード操作
-- **中**: ファイル操作、キーボードショートカット、ユーザビリティ向上、型安全性の強化
-- **低**: 詳細なアニメーション、アクセシビリティ、高度な最適化、高度な型定義
+### Bun の強力な内蔵機能
+
+- **高速パッケージマネージャー**: npm/yarn の数倍の速度
+- **内蔵バンドラー**: Webpack/Vite 不要、設定レス
+- **内蔵テストランナー**: Jest 互換、追加設定不要
+- **内蔵 TypeScript サポート**: 追加設定なしで TypeScript 実行
+- **内蔵開発サーバー**: ホットリロード、自動リフレッシュ
+- **Tree-shaking**: 使用しないコードの自動削除
+
+### 開発体験の向上
+
+- **依存関係管理**: `bun add` で高速インストール
+- **ビルド速度**: 従来ツールの 5-10 倍高速
+- **メモリ効率**: 低メモリ使用量
+- **型安全性**: 強力な TypeScript 統合
+- **開発ツール**: ESLint、Prettier 等の統合
+
+### 最終成果物の軽量性
+
+- **静的ファイル**: dist フォルダの内容をそのままデプロイ
+- **最適化**: Bun の自動最適化でファイルサイズ削減
+- **依存関係**: d3.js 等は全て最適化されてバンドル
+- **互換性**: 同じブラウザサポート
+
+### 開発時間への影響
+
+- **初期セットアップ**: 30 分程度（設定が簡単）
+- **日々の開発**: -30-40%時間短縮（ビルド高速化効果）
+- **デバッグ**: より効率的（ソースマップ、型チェック）
+- **メンテナンス**: 大幅改善（依存関係管理）
+
+### 推奨 Bun 設定例
+
+#### package.json スクリプト
+
+```json
+{
+  "scripts": {
+    "dev": "bun run --watch src/main.ts",
+    "build": "bun build src/main.ts --outdir dist --minify --splitting --target browser",
+    "preview": "bun run build && bun serve dist",
+    "test": "bun test",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write src"
+  }
+}
+```
+
+#### tsconfig.json（Bun 最適化）
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "lib": ["DOM", "ES2022"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "sourceMap": true,
+    "types": ["bun-types"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+#### bunfig.toml（オプション）
+
+```toml
+[install]
+cache = true
+exact = true
+
+[dev]
+port = 3000
+
+[build]
+target = "browser"
+format = "esm"
+minify = true
+splitting = true
+```
