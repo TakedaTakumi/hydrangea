@@ -36,6 +36,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
+        // cSpell: ignore Menlo
         mono: ["JetBrains Mono", "Menlo", "Monaco", "monospace"],
       },
       fontSize: {

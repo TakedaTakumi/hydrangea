@@ -47,10 +47,9 @@
           "overrideConfigFile": "eslint.config.mjs"
         },
         "eslint.validate": ["javascript", "javascriptreact", "vue"],
-        "editor.codeActionsOnSave": [
-          "source.addMissingImports",
-          "source.fixAll.eslint"
-        ],
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
         "markdown-preview-enhanced.breakOnSingleNewLine": false,
         "markdown-preview-enhanced.scrollSync": false,
         "files.autoSave": "afterDelay",
@@ -58,7 +57,22 @@
         "markdown.preview.scrollEditorWithPreview": false,
         "[typescript]": {
           "editor.defaultFormatter": "esbenp.prettier-vscode"
-        }
+        },
+
+        "typescript.preferences.importModuleSpecifier": "relative",
+        "tailwindCSS.includeLanguages": {
+          "typescript": "javascript",
+          "typescriptreact": "javascript"
+        },
+        "tailwindCSS.experimental.classRegex": [
+          ["tw`([^`]*)", "([^`]*)"],
+          ["tw\\.[^`]+`([^`]*)`", "([^`]*)"],
+          ["tw\\(.*?\\).*?`([^`]*)", "([^`]*)"],
+          ["(?:enter|leave)(?:From|To)?=\\s*(?:\"|')([^\"']*)", "([^\"']*)"]
+        ],
+        "css.validate": false,
+        "less.validate": false,
+        "scss.validate": false
       },
       // cspell: disable
       "extensions": [
@@ -75,7 +89,8 @@
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "heaths.vscode-guid",
-        "bradlc.vscode-tailwindcss"
+        "bradlc.vscode-tailwindcss",
+        "ms-vscode.vscode-typescript-next"
       ]
       // cspell: enable
     }

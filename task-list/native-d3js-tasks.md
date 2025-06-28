@@ -188,10 +188,10 @@ mindmap-simple-tool/
     - [x] public/css/input.css の作成（@tailwind ディレクティブ）
     - [x] public/css/components.css の作成（@apply ディレクティブ用）
     - [x] public/css/mindmap.css の作成（特殊スタイル用）
-- [ ] 開発環境の最終設定
-  - [ ] ESLint + Prettier の設定
-  - [ ] VS Code Tailwind CSS IntelliSense の有効化
-  - [ ] 開発サーバーの動作確認
+- [x] 開発環境の最終設定
+  - [x] ESLint + Prettier の設定
+  - [x] VS Code Tailwind CSS IntelliSense の有効化
+  - [x] 開発サーバーの動作確認
 
 ## 基本画面・レイアウト実装（Tailwind CSS）
 

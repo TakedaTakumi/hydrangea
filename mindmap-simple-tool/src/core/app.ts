@@ -8,14 +8,16 @@ export class MindMapApp {
   /**
    * アプリケーションの初期化
    */
-  async initialize(): Promise<void> {
+  initialize(): void {
     if (this.initialized) {
-      console.warn("アプリケーションは既に初期化されています");
+      // eslint-disable-next-line no-console
+      console.warn('アプリケーションは既に初期化されています');
       return;
     }
 
     try {
-      console.log("アプリケーション初期化を開始...");
+      // eslint-disable-next-line no-console
+      console.log('アプリケーション初期化を開始...');
 
       // TODO: 各モジュールの初期化
       // - イベントシステムの初期化
@@ -24,9 +26,11 @@ export class MindMapApp {
       // - d3.js レンダラーの初期化
 
       this.initialized = true;
-      console.log("アプリケーション初期化完了");
+      // eslint-disable-next-line no-console
+      console.log('アプリケーション初期化完了');
     } catch (error) {
-      console.error("アプリケーション初期化エラー:", error);
+      // eslint-disable-next-line no-console
+      console.error('アプリケーション初期化エラー:', error);
       throw error;
     }
   }
@@ -40,6 +44,7 @@ export class MindMapApp {
     // TODO: リソースのクリーンアップ
 
     this.initialized = false;
-    console.log("アプリケーションが破棄されました");
+    // eslint-disable-next-line no-console
+    console.log('アプリケーションが破棄されました');
   }
 }

@@ -1,23 +1,26 @@
 // Application entry point
-import { MindMapApp } from "@/core/app.ts";
-import "@/config/theme.ts";
+import { MindMapApp } from '@/core/app.ts';
+import '@/config/theme.ts';
 
 /**
  * アプリケーションの初期化と起動
  */
-async function main(): Promise<void> {
+function main(): void {
   try {
-    console.log("🚀 マインドマップアプリケーションを初期化中...");
+    // eslint-disable-next-line no-console
+    console.log('🚀 マインドマップアプリケーションを初期化中...');
 
     // アプリケーションインスタンスの作成
     const app = new MindMapApp();
 
     // アプリケーションの初期化
-    await app.initialize();
+    app.initialize();
 
-    console.log("✅ マインドマップアプリケーションが正常に起動しました");
+    // eslint-disable-next-line no-console
+    console.log('✅ マインドマップアプリケーションが正常に起動しました');
   } catch (error) {
-    console.error("❌ アプリケーションの初期化に失敗しました:", error);
+    // eslint-disable-next-line no-console
+    console.error('❌ アプリケーションの初期化に失敗しました:', error);
 
     // エラー画面の表示
     showErrorScreen(error as Error);
@@ -28,7 +31,9 @@ async function main(): Promise<void> {
  * エラー画面の表示
  */
 function showErrorScreen(error: Error): void {
-  const appElement = document.getElementById("app");
+  if (typeof document === 'undefined') return;
+
+  const appElement = document.getElementById('app');
   if (!appElement) return;
 
   appElement.innerHTML = `
@@ -63,8 +68,10 @@ ${error.stack}
 }
 
 // DOM読み込み完了後にアプリケーションを起動
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", main);
-} else {
-  main();
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => void main());
+  } else {
+    void main();
+  }
 }
