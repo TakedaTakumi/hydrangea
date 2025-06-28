@@ -150,12 +150,12 @@ mindmap-simple-tool/
 
 ## プロジェクトセットアップ
 
-- [ ] プロジェクト初期化と基本構造
-  - [ ] `bun init` でプロジェクト初期化
-  - [ ] ディレクトリ構造の設計（上記 Bun + Tailwind 構成に従って作成）
-  - [ ] README.md の作成
-  - [ ] .gitignore の設定（node_modules、dist、bun.lockb、output.css を含める）
-  - [ ] bunfig.toml の設定（オプション）
+- [x] プロジェクト初期化と基本構造
+  - [x] `bun init` でプロジェクト初期化
+  - [x] ディレクトリ構造の設計（上記 Bun + Tailwind 構成に従って作成）
+  - [x] README.md の作成
+  - [x] .gitignore の設定（node_modules、dist、bun.lockb、output.css を含める）
+  - [x] bunfig.toml の設定（オプション）
 - [ ] パッケージ・ライブラリ導入
   - [ ] `bun add -d typescript @types/node` で TypeScript 環境設定
   - [ ] `bun add -d tailwindcss postcss autoprefixer` で Tailwind 導入
