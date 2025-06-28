@@ -1,0 +1,529 @@
+# filepath: /home/takeda/workspace/proj/private/hydrangea/src/SampleMap.yaml
+background_color: "#f8f8ff"
+defaults:
+  node:
+    content: "ノード"
+    icon: ""
+    margin: 10
+    padding: 5
+    collapsed: false
+  style:
+    inherit_style: true
+    fill: "#fff"
+    stroke: "#000"
+    edge:
+      color: "#000"
+      type: "solid"
+      width: 2
+    font:
+      family: ""
+      size: 14
+      color: ""
+      bold: false
+      italic: false
+      under: false
+root:
+  content: "サンプルマップ"
+  right:
+    icon: ""
+    children:
+      - "node_a"
+      - "node_b"
+      - "node_d"
+      - "node_e"
+    collapsed: false
+  left:
+    icon: ""
+    children:
+      - "node_c"
+      - "node_f"
+      - "node_g"
+    collapsed: false
+  style:
+    inherit_style: true
+    fill: "#e0f7fa"
+    stroke: "#00838f"
+    edge:
+      color: "#00838f"
+      type: "solid"
+      width: 3
+    font:
+      family: ""
+      size: 16
+      bold: true
+      italic: false
+      under: false
+node_list:
+  node_a:
+    content: "右ノードA"
+    icon: ""
+    children:
+      - "node_a1"
+      - "node_a2"
+      - "node_a3"
+    style:
+      inherit_style: true
+      fill: "#fffde7"
+      stroke: "#fbc02d"
+      edge:
+        color: "#fbc02d"
+        type: "solid"
+        width: 2
+      font:
+        family: ""
+        size: 14
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_a1:
+    content: "右A-1"
+    icon: ""
+    children:
+      - "node_a1a"
+      - "node_a1b"
+    style:
+      inherit_style: true
+      fill: "#e1f5fe"
+      stroke: "#039be5"
+      edge:
+        color: "#039be5"
+        type: "dotted"
+        width: 2
+      font:
+        family: ""
+        size: 13
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_a1a:
+    content: "右A-1-a"
+    icon: ""
+    children: []
+    style:
+      inherit_style: true
+      fill: "#e3f2fd"
+      stroke: "#0288d1"
+      edge:
+        color: "#0288d1"
+        type: "solid"
+        width: 2
+      font:
+        family: ""
+        size: 12
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_a1b:
+    content: "右A-1-b"
+    icon: ""
+    children: []
+    style:
+      inherit_style: true
+      fill: "#fff8e1"
+      stroke: "#fbc02d"
+      edge:
+        color: "#fbc02d"
+        type: "dotted"
+        width: 2
+      font:
+        family: ""
+        size: 12
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_a2:
+    content: "右A-2"
+    icon: ""
+    children:
+      - "node_a2a"
+    style:
+      inherit_style: true
+      fill: "#fce4ec"
+      stroke: "#d81b60"
+      edge:
+        color: "#d81b60"
+        type: "dashed"
+        width: 2
+      font:
+        family: ""
+        size: 13
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_a2a:
+    content: "右A-2-a"
+    icon: ""
+    children: []
+    style:
+      inherit_style: true
+      fill: "#f8bbd0"
+      stroke: "#ad1457"
+      edge:
+        color: "#ad1457"
+        type: "solid"
+        width: 2
+      font:
+        family: ""
+        size: 12
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_a3:
+    content: "右A-3"
+    icon: ""
+    children: []
+    style:
+      inherit_style: true
+      fill: "#e0f2f1"
+      stroke: "#00897b"
+      edge:
+        color: "#00897b"
+        type: "solid"
+        width: 2
+      font:
+        family: ""
+        size: 13
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_b:
+    content: "右ノードB"
+    icon: ""
+    children:
+      - "node_b1"
+      - "node_b2"
+    style:
+      inherit_style: true
+      fill: "#fff3e0"
+      stroke: "#ff6f00"
+      edge:
+        color: "#ff6f00"
+        type: "solid"
+        width: 2
+      font:
+        family: ""
+        size: 14
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_b1:
+    content: "右B-1"
+    icon: ""
+    children: []
+    style:
+      inherit_style: true
+      fill: "#ffe0b2"
+      stroke: "#f57c00"
+      edge:
+        color: "#f57c00"
+        type: "solid"
+        width: 2
+      font:
+        family: ""
+        size: 12
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_b2:
+    content: "右B-2"
+    icon: ""
+    children: []
+    style:
+      inherit_style: true
+      fill: "#fffde7"
+      stroke: "#fbc02d"
+      edge:
+        color: "#fbc02d"
+        type: "dotted"
+        width: 2
+      font:
+        family: ""
+        size: 12
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_c:
+    content: "左ノードC"
+    icon: ""
+    children:
+      - "node_c1"
+      - "node_c2"
+    style:
+      inherit_style: true
+      fill: "#e8f5e9"
+      stroke: "#388e3c"
+      edge:
+        color: "#388e3c"
+        type: "solid"
+        width: 2
+      font:
+        family: ""
+        size: 14
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_c1:
+    content: "左C-1"
+    icon: ""
+    children:
+      - "node_c1a"
+    style:
+      inherit_style: true
+      fill: "#f3e5f5"
+      stroke: "#8e24aa"
+      edge:
+        color: "#8e24aa"
+        type: "dotted"
+        width: 2
+      font:
+        family: ""
+        size: 13
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_c1a:
+    content: "左C-1-a"
+    icon: ""
+    children: []
+    style:
+      inherit_style: true
+      fill: "#ede7f6"
+      stroke: "#5e35b1"
+      edge:
+        color: "#5e35b1"
+        type: "solid"
+        width: 2
+      font:
+        family: ""
+        size: 12
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_c2:
+    content: "左C-2"
+    icon: ""
+    children: []
+    style:
+      inherit_style: true
+      fill: "#f1f8e9"
+      stroke: "#689f38"
+      edge:
+        color: "#689f38"
+        type: "solid"
+        width: 2
+      font:
+        family: ""
+        size: 13
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_d:
+    content: "右ノードD"
+    icon: ""
+    children:
+      - "node_d1"
+      - "node_d2"
+    style:
+      inherit_style: true
+      fill: "#e1f5fe"
+      stroke: "#039be5"
+      edge:
+        color: "#039be5"
+        type: "solid"
+        width: 2
+      font:
+        family: ""
+        size: 14
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_d1:
+    content: "右D-1"
+    icon: ""
+    children: []
+    style:
+      inherit_style: true
+      fill: "#b3e5fc"
+      stroke: "#0288d1"
+      edge:
+        color: "#0288d1"
+        type: "solid"
+        width: 2
+      font:
+        family: ""
+        size: 12
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_d2:
+    content: "右D-2"
+    icon: ""
+    children: []
+    style:
+      inherit_style: true
+      fill: "#e0f2f1"
+      stroke: "#00897b"
+      edge:
+        color: "#00897b"
+        type: "solid"
+        width: 2
+      font:
+        family: ""
+        size: 12
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_e:
+    content: "右ノードE"
+    icon: ""
+    children:
+      - "node_e1"
+    style:
+      inherit_style: true
+      fill: "#fce4ec"
+      stroke: "#d81b60"
+      edge:
+        color: "#d81b60"
+        type: "dashed"
+        width: 2
+      font:
+        family: ""
+        size: 14
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_e1:
+    content: "右E-1"
+    icon: ""
+    children: []
+    style:
+      inherit_style: true
+      fill: "#f8bbd0"
+      stroke: "#ad1457"
+      edge:
+        color: "#ad1457"
+        type: "solid"
+        width: 2
+      font:
+        family: ""
+        size: 12
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_f:
+    content: "左ノードF"
+    icon: ""
+    children:
+      - "node_f1"
+      - "node_f2"
+    style:
+      inherit_style: true
+      fill: "#e8f5e9"
+      stroke: "#388e3c"
+      edge:
+        color: "#388e3c"
+        type: "solid"
+        width: 2
+      font:
+        family: ""
+        size: 14
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_f1:
+    content: "左F-1"
+    icon: ""
+    children: []
+    style:
+      inherit_style: true
+      fill: "#f1f8e9"
+      stroke: "#689f38"
+      edge:
+        color: "#689f38"
+        type: "solid"
+        width: 2
+      font:
+        family: ""
+        size: 12
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_f2:
+    content: "左F-2"
+    icon: ""
+    children: []
+    style:
+      inherit_style: true
+      fill: "#ede7f6"
+      stroke: "#5e35b1"
+      edge:
+        color: "#5e35b1"
+        type: "solid"
+        width: 2
+      font:
+        family: ""
+        size: 12
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_g:
+    content: "左ノードG"
+    icon: ""
+    children:
+      - "node_g1"
+    style:
+      inherit_style: true
+      fill: "#e1f5fe"
+      stroke: "#039be5"
+      edge:
+        color: "#039be5"
+        type: "solid"
+        width: 2
+      font:
+        family: ""
+        size: 14
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
+  node_g1:
+    content: "左G-1"
+    icon: ""
+    children: []
+    style:
+      inherit_style: true
+      fill: "#b3e5fc"
+      stroke: "#0288d1"
+      edge:
+        color: "#0288d1"
+        type: "solid"
+        width: 2
+      font:
+        family: ""
+        size: 12
+        bold: false
+        italic: false
+        under: false
+    collapsed: false
