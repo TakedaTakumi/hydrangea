@@ -1,0 +1,22 @@
+{
+  "language": "en",
+  "words": [
+    "devcontainer",
+    "usecase",
+    "mindmap"
+  ],
+  "ignoreWords": [
+    "devcontainers",
+    "bunfig",
+    "bunx",
+    "Flexbox"
+  ],
+  "ignorePaths": [
+    "vscode-extension",
+    ".git/objects",
+    ".vscode",
+    ".vscode-insiders",
+    "node_modules",
+    "coverage/*"
+  ]
+}
