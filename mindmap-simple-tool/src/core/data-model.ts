@@ -24,6 +24,7 @@ import {
   MindMapEventType,
 } from '../types';
 import { EventEmitter } from './event-emitter';
+import { IdGenerator } from '../utils/helpers';
 
 // ============================================================================
 // ノードファクトリー
@@ -34,17 +35,12 @@ import { EventEmitter } from './event-emitter';
  * デフォルト値の適用と一意ID生成を担当
  */
 export class NodeFactory {
-  /** ID生成カウンター */
-  private static idCounter = 0;
-
   /**
-   * 一意なノードIDを生成
+   * 一意なノードIDを生成（UUIDv7ベース）
    * @returns 一意のノードID
    */
   static generateId(): NodeId {
-    const timestamp = Date.now();
-    const counter = ++this.idCounter;
-    return `node_${timestamp}_${counter}`;
+    return IdGenerator.generateUuidV7Id('node');
   }
 
   /**
