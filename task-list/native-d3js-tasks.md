@@ -213,16 +213,16 @@ mindmap-simple-tool/
 
 ## 状態管理システム実装
 
-- [ ] TypeScript 型定義の作成
+- [x] TypeScript 型定義の作成
   - [x] 基本型定義（types/index.ts）
   - [x] ノード関連型定義（types/node.ts）
   - [x] マインドマップ関連型定義（types/mindmap.ts）
   - [x] UI 関連型定義（types/ui.ts）
   - [x] イベント関連型定義
-- [ ] 基本的な状態管理クラスの作成
+- [x] 基本的な状態管理クラスの作成
   - [x] Observer Pattern の実装（core/event-emitter.ts）
-  - [ ] 状態管理クラスの作成（core/state-manager.ts）
-  - [ ] 型安全なイベント発行・購読システム
+  - [x] 状態管理クラスの作成（core/state-manager.ts）
+  - [x] 型安全なイベント発行・購読システム
 - [ ] マインドマップデータモデルの定義
   - [ ] ノードデータ構造の設計（core/data-model.ts）
   - [ ] ツリー構造の管理クラス（型安全な実装）

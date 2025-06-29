@@ -192,6 +192,61 @@ export type FileOperationResult<T = any> = {
 // 再エクスポート
 // ============================================================================
 
+// ノード関連型定義の再エクスポート
+export type {
+  NodeStyle,
+  NodeLayout,
+  NodeState,
+  NodeMetadata,
+  MindMapNode,
+  NodeCollection,
+  NodeTreeStats,
+  CreateNodeData,
+  UpdateNodeData,
+  NodeMoveData,
+  NodeCloneData,
+  NodeValidationError,
+  NodeValidationResult,
+} from './node';
+
+// ノード関連定数の再エクスポート
+export {
+  DEFAULT_NODE_STYLE,
+  DEFAULT_NODE_LAYOUT,
+  DEFAULT_NODE_STATE,
+  DEFAULT_NODE_METADATA,
+} from './node';
+
+// マインドマップ関連型定義の再エクスポート
+export type {
+  MindMapMetadata,
+  MindMapSettings,
+  MindMapViewport,
+  MindMap,
+  CreateMindMapData,
+  UpdateMindMapData,
+  LayoutDirection,
+  LayoutSettings,
+  ExportSettings,
+  ImportSettings,
+  MergeMode,
+  IdConflictResolution,
+  ErrorHandlingMode,
+  HistorySettings,
+  MindMapValidationResult,
+} from './mindmap';
+
+// マインドマップ関連定数の再エクスポート
+export {
+  DEFAULT_MINDMAP_METADATA,
+  DEFAULT_MINDMAP_SETTINGS,
+  DEFAULT_VIEWPORT,
+  DEFAULT_LAYOUT_SETTINGS,
+  DEFAULT_EXPORT_SETTINGS,
+  DEFAULT_IMPORT_SETTINGS,
+  DEFAULT_HISTORY_SETTINGS,
+} from './mindmap';
+
 // UI関連型定義の再エクスポート
 export * from './ui';
 
@@ -200,15 +255,12 @@ export type {
   BaseEvent,
   CustomEvent,
   // ノード関連イベント
-  NodeEventType,
   NodeEventData,
   NodeEvent,
   // マインドマップ関連イベント
-  MindMapEventType,
   MindMapEventData,
   MindMapEvent,
   // UI関連イベント（別名でエクスポート）
-  UIEventType,
   UIEventData,
   UIEvent as UIEventDetails,
   // ファイル関連イベント
@@ -250,3 +302,6 @@ export type {
   TypedEventMap,
   TypedEventEmitter,
 } from './event';
+
+// イベント関連enum（値）の再エクスポート
+export { NodeEventType, MindMapEventType, UIEventType } from './event';
