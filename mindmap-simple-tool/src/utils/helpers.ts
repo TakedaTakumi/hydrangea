@@ -100,10 +100,17 @@ export class IdGenerator {
     }
 
     // プレフィックス付きの場合
-    const parts = id.split('_');
-    if (parts.length >= 2) {
-      const uuidPart = parts[parts.length - 1];
-      return uuidPart ? uuidV7Regex.test(uuidPart) : false;
+    const underscoreIndex = id.indexOf('_');
+    if (underscoreIndex > 0) {
+      const uuidPart = id.substring(underscoreIndex + 1);
+
+      // UUIDの標準形式 (36文字) または短縮形式 (8文字) をチェック
+      if (uuidPart.length === 36) {
+        return uuidV7Regex.test(uuidPart);
+      } else if (uuidPart.length === 8) {
+        // 短縮形式は最初の8文字のヘックス文字列
+        return /^[0-9a-f]{8}$/i.test(uuidPart);
+      }
     }
 
     return false;
@@ -120,11 +127,23 @@ export class IdGenerator {
     }
 
     let uuidPart = id;
-    if (id.includes('_')) {
-      const parts = id.split('_');
-      const lastPart = parts[parts.length - 1];
-      if (!lastPart) return null;
-      uuidPart = lastPart;
+    const underscoreIndex = id.indexOf('_');
+    if (underscoreIndex > 0) {
+      const extractedPart = id.substring(underscoreIndex + 1);
+      if (extractedPart.length === 36) {
+        // 標準形式UUIDv7
+        uuidPart = extractedPart;
+      } else if (extractedPart.length === 8) {
+        // 短縮形式の場合、タイムスタンプ部分のみ
+        try {
+          const timestamp = parseInt(extractedPart, 16);
+          return timestamp;
+        } catch {
+          return null;
+        }
+      } else {
+        return null;
+      }
     }
 
     try {

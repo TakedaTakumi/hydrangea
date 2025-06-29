@@ -3,9 +3,11 @@
  *
  * このテストファイルは、MindMapStateManagerのキャンバス表示状態管理機能をテストします。
  * ズーム、パン、ビューポート操作などの機能を包括的にテストします。
+ * プロパティベーステストによりランダムな入力値での堅牢性も検証します。
  */
 
 import { describe, it, expect, beforeEach } from 'bun:test';
+import fc from 'fast-check';
 import { MindMapStateManager } from '../../../src/core/mindmap-state-manager';
 import { MindMapEventType } from '../../../src/types/event';
 import type { Point2D, Size, MindMapViewport } from '../../../src/types';
@@ -311,6 +313,200 @@ describe('MindMapStateManager - キャンバス表示状態管理', () => {
       // 新しい最小値以下をテスト
       manager.setZoom(0.5);
       expect(manager.getViewport().zoom).toBe(1.0); // 新しい最小値
+    });
+  });
+
+  describe('プロパティベーステスト - ズーム機能の堅牢性', () => {
+    it('任意のズーム値で制約が正しく適用される', () => {
+      fc.assert(
+        fc.property(
+          fc.double({ min: 0.01, max: 100.0, noNaN: true }), // 任意のズーム値
+          fc.double({ min: 0.1, max: 1.0, noNaN: true }), // 最小ズーム
+          fc.double({ min: 1.0, max: 10.0, noNaN: true }), // 最大ズーム
+          (zoomValue, minZoom, maxZoom) => {
+            const manager = new MindMapStateManager();
+
+            // ズーム制約を設定
+            manager.setZoomConstraints(minZoom, maxZoom);
+
+            // 任意のズーム値を設定
+            manager.setZoom(zoomValue);
+
+            const resultZoom = manager.getViewport().zoom;
+
+            // 結果が制約内に収まっていることを検証
+            return resultZoom >= minZoom && resultZoom <= maxZoom;
+          }
+        ),
+        { numRuns: 100 } // 100回のランダムテストを実行
+      );
+    });
+
+    it('連続したズーム操作で状態の一貫性が保たれる', () => {
+      fc.assert(
+        fc.property(
+          fc.array(fc.double({ min: 0.5, max: 5.0, noNaN: true }), {
+            minLength: 1,
+            maxLength: 10,
+          }), // ズーム操作のシーケンス
+          zoomSequence => {
+            const manager = new MindMapStateManager();
+            let previousZoom = manager.getViewport().zoom;
+
+            zoomSequence.forEach(zoomValue => {
+              manager.setZoom(zoomValue);
+              const currentZoom = manager.getViewport().zoom;
+
+              // ズーム値が制約内であることを確認
+              expect(currentZoom).toBeGreaterThanOrEqual(0.1); // デフォルト最小値
+              expect(currentZoom).toBeLessThanOrEqual(5.0); // デフォルト最大値
+
+              previousZoom = currentZoom;
+            });
+
+            return true;
+          }
+        ),
+        { numRuns: 50 }
+      );
+    });
+  });
+
+  describe('プロパティベーステスト - パン機能の堅牢性', () => {
+    it('任意の座標でパン操作が正常に動作する', () => {
+      fc.assert(
+        fc.property(
+          fc.double({ min: -10000, max: 10000, noNaN: true }), // X座標
+          fc.double({ min: -10000, max: 10000, noNaN: true }), // Y座標
+          (x, y) => {
+            const manager = new MindMapStateManager();
+            const targetPoint: Point2D = { x, y };
+
+            manager.setPan(targetPoint);
+            const viewport = manager.getViewport();
+
+            // 設定した座標と取得した座標が一致することを検証
+            return (
+              Math.abs(viewport.center.x - x) < 0.001 &&
+              Math.abs(viewport.center.y - y) < 0.001
+            );
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    it('相対パン操作の結果が数学的に正しい', () => {
+      fc.assert(
+        fc.property(
+          fc.double({ min: -1000, max: 1000, noNaN: true }), // 初期X
+          fc.double({ min: -1000, max: 1000, noNaN: true }), // 初期Y
+          fc.double({ min: -500, max: 500, noNaN: true }), // デルタX
+          fc.double({ min: -500, max: 500, noNaN: true }), // デルタY
+          (initX, initY, deltaX, deltaY) => {
+            const manager = new MindMapStateManager();
+
+            // 初期位置を設定
+            manager.setPan({ x: initX, y: initY });
+
+            // 相対移動を実行
+            manager.panBy(deltaX, deltaY);
+
+            const viewport = manager.getViewport();
+            const expectedX = initX + deltaX;
+            const expectedY = initY + deltaY;
+
+            // 計算結果が期待値と一致することを検証
+            return (
+              Math.abs(viewport.center.x - expectedX) < 0.001 &&
+              Math.abs(viewport.center.y - expectedY) < 0.001
+            );
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+  });
+
+  describe('プロパティベーステスト - ビューポート統合テスト', () => {
+    it('ズームとパンの組み合わせ操作で状態の整合性が保たれる', () => {
+      fc.assert(
+        fc.property(
+          fc.record({
+            zoom: fc.double({ min: 0.2, max: 4.0, noNaN: true }),
+            centerX: fc.double({ min: -2000, max: 2000, noNaN: true }),
+            centerY: fc.double({ min: -2000, max: 2000, noNaN: true }),
+            sizeWidth: fc.integer({ min: 100, max: 2000 }),
+            sizeHeight: fc.integer({ min: 100, max: 1500 }),
+          }),
+          viewportData => {
+            const manager = new MindMapStateManager();
+
+            // ビューポートを一括設定
+            manager.setViewport({
+              zoom: viewportData.zoom,
+              center: { x: viewportData.centerX, y: viewportData.centerY },
+              size: {
+                width: viewportData.sizeWidth,
+                height: viewportData.sizeHeight,
+              },
+            });
+
+            const viewport = manager.getViewport();
+
+            // すべての値が正しく設定されていることを検証
+            const isZoomValid = viewport.zoom >= 0.1 && viewport.zoom <= 5.0;
+            const isCenterValid =
+              Math.abs(viewport.center.x - viewportData.centerX) < 0.001 &&
+              Math.abs(viewport.center.y - viewportData.centerY) < 0.001;
+            const isSizeValid =
+              viewport.size.width === viewportData.sizeWidth &&
+              viewport.size.height === viewportData.sizeHeight;
+
+            return isZoomValid && isCenterValid && isSizeValid;
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    it('表示オプションの変更が副作用を起こさない', () => {
+      fc.assert(
+        fc.property(
+          fc.record({
+            showGrid: fc.boolean(),
+            showMinimap: fc.boolean(),
+            animationsEnabled: fc.boolean(),
+          }),
+          options => {
+            const manager = new MindMapStateManager();
+            const initialViewport = manager.getViewport();
+
+            // 表示オプションを変更
+            manager.setShowGrid(options.showGrid);
+            manager.setShowMinimap(options.showMinimap);
+            manager.setAnimationsEnabled(options.animationsEnabled);
+
+            const canvasState = manager.getCanvasState();
+            const finalViewport = manager.getViewport();
+
+            // 表示オプションが正しく設定されている
+            const optionsCorrect =
+              canvasState.showGrid === options.showGrid &&
+              canvasState.showMinimap === options.showMinimap &&
+              canvasState.animationsEnabled === options.animationsEnabled;
+
+            // ビューポートが変更されていない
+            const viewportUnchanged =
+              finalViewport.zoom === initialViewport.zoom &&
+              finalViewport.center.x === initialViewport.center.x &&
+              finalViewport.center.y === initialViewport.center.y;
+
+            return optionsCorrect && viewportUnchanged;
+          }
+        ),
+        { numRuns: 50 }
+      );
     });
   });
 });

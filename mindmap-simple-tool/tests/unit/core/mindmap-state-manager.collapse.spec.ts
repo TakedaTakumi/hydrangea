@@ -1,9 +1,11 @@
 /**
  * MindMapStateManager の折りたたみ状態管理機能のテスト
  * 折りたたみ・展開・可視状態の制御機能をテスト
+ * プロパティベーステストにより、ランダムなツリー構造での折りたたみ動作を検証
  */
 
 import { describe, it, expect, beforeEach } from 'bun:test';
+import fc from 'fast-check';
 import { MindMapStateManager } from '../../../src/core/mindmap-state-manager';
 import { MindMapEventType } from '../../../src/types/event';
 import type { NodeId } from '../../../src/types';
@@ -347,6 +349,252 @@ describe('MindMapStateManager - 折りたたみ状態管理', () => {
       expect(stateManager.getNodeInfo(grandChildNodeId).parentId).toBe(null);
       // ルートノードになったので可視状態は維持される
       expect(stateManager.isNodeVisible(grandChildNodeId)).toBe(true);
+    });
+  });
+
+  describe('プロパティベーステスト - 折りたたみ状態の堅牢性', () => {
+    // ノードIDジェネレータ
+    const nodeIdArbitrary = fc
+      .string({ minLength: 4, maxLength: 8 })
+      .map(s => `node_${s}` as NodeId);
+
+    // ツリー構造ジェネレータ（親子関係のペア）
+    const treeStructureArbitrary = fc.array(
+      fc.record({
+        parentId: nodeIdArbitrary,
+        childId: nodeIdArbitrary,
+      }),
+      { minLength: 2, maxLength: 8 }
+    );
+
+    it('ランダムなツリー構造で折りたたみ操作の一貫性が保たれる', () => {
+      fc.assert(
+        fc.property(
+          treeStructureArbitrary,
+          fc.array(fc.boolean(), { minLength: 2, maxLength: 8 }),
+          (
+            treeRelations: Array<{ parentId: NodeId; childId: NodeId }>,
+            collapseFlags: boolean[]
+          ) => {
+            const manager = new MindMapStateManager();
+            const allNodeIds = new Set<NodeId>();
+
+            // 全ノードを収集
+            treeRelations.forEach(rel => {
+              allNodeIds.add(rel.parentId);
+              allNodeIds.add(rel.childId);
+            });
+
+            // ノードを追加
+            Array.from(allNodeIds).forEach(nodeId => {
+              manager.addNode(nodeId, { text: `Node ${nodeId}` });
+            });
+
+            // 親子関係を設定
+            treeRelations.forEach(rel => {
+              try {
+                manager.setNodeParent(rel.childId, rel.parentId);
+              } catch {
+                // 循環参照等のエラーは無視（設定が無効な場合）
+              }
+            });
+
+            // ランダムな折りたたみ操作
+            const operationCount = Math.min(
+              Array.from(allNodeIds).length,
+              collapseFlags.length
+            );
+            const nodeIdArray = Array.from(allNodeIds);
+
+            for (let i = 0; i < operationCount; i++) {
+              const nodeId = nodeIdArray[i];
+              const shouldCollapse = collapseFlags[i];
+
+              try {
+                manager.setNodeCollapsed(nodeId, shouldCollapse);
+
+                const nodeInfo = manager.getNodeInfo(nodeId);
+
+                // 設定した折りたたみ状態が正しく反映されていることを検証
+                if (nodeInfo.isCollapsed !== shouldCollapse) {
+                  return false;
+                }
+              } catch {
+                // エラーが発生した場合は無視（ノードが存在しない等）
+              }
+            }
+
+            return true;
+          }
+        ),
+        { numRuns: 30 }
+      );
+    });
+
+    it('階層の深いツリーで可視状態の計算が正しく動作する', () => {
+      fc.assert(
+        fc.property(
+          fc.array(nodeIdArbitrary, { minLength: 3, maxLength: 10 }),
+          fc.array(fc.boolean(), { minLength: 1, maxLength: 5 }),
+          (nodeIds: NodeId[], collapseStates: boolean[]) => {
+            const manager = new MindMapStateManager();
+
+            // 線形階層を構築（root -> child1 -> child2 -> ...）
+            nodeIds.forEach(nodeId => {
+              manager.addNode(nodeId, { text: `Node ${nodeId}` });
+            });
+
+            // 親子関係を設定（チェーン状）
+            for (let i = 1; i < nodeIds.length; i++) {
+              manager.setNodeParent(nodeIds[i], nodeIds[i - 1]);
+            }
+
+            // ランダムな折りたたみ操作
+            const operationCount = Math.min(
+              nodeIds.length - 1,
+              collapseStates.length
+            );
+            for (let i = 0; i < operationCount; i++) {
+              const nodeId = nodeIds[i];
+              const shouldCollapse = collapseStates[i];
+
+              manager.setNodeCollapsed(nodeId, shouldCollapse);
+            }
+
+            // 可視状態の検証
+            for (let i = 0; i < nodeIds.length; i++) {
+              const nodeId = nodeIds[i];
+              const isVisible = manager.isNodeVisible(nodeId);
+
+              // ルートノードは常に可視
+              if (i === 0) {
+                if (!isVisible) {
+                  return false;
+                }
+              } else {
+                // 子ノードの可視性は親の折りたたみ状態に依存
+                let shouldBeVisible = true;
+                for (let j = 0; j < i && j < operationCount; j++) {
+                  if (collapseStates[j]) {
+                    shouldBeVisible = false;
+                    break;
+                  }
+                }
+
+                if (isVisible !== shouldBeVisible) {
+                  return false;
+                }
+              }
+            }
+
+            return true;
+          }
+        ),
+        { numRuns: 25 }
+      );
+    });
+
+    it('一括展開・折りたたみ操作で全ノードの状態が正しく更新される', () => {
+      fc.assert(
+        fc.property(
+          fc.array(nodeIdArbitrary, { minLength: 2, maxLength: 8 }),
+          fc.array(fc.boolean(), { minLength: 2, maxLength: 8 }), // 初期の折りたたみ状態
+          (nodeIds: NodeId[], initialCollapseStates: boolean[]) => {
+            const manager = new MindMapStateManager();
+
+            // ノードを追加
+            nodeIds.forEach(nodeId => {
+              manager.addNode(nodeId, { text: `Node ${nodeId}` });
+            });
+
+            // 星形構造を構築（最初のノードを中心に、他を子ノードに）
+            const rootId = nodeIds[0];
+            for (let i = 1; i < nodeIds.length; i++) {
+              manager.setNodeParent(nodeIds[i], rootId);
+            }
+
+            // 初期の折りたたみ状態を設定
+            const stateCount = Math.min(
+              nodeIds.length,
+              initialCollapseStates.length
+            );
+            for (let i = 0; i < stateCount; i++) {
+              manager.setNodeCollapsed(nodeIds[i], initialCollapseStates[i]);
+            }
+
+            // 一括展開テスト
+            manager.expandAllNodes();
+            const allExpanded = nodeIds.every(nodeId => {
+              return !manager.getNodeInfo(nodeId).isCollapsed;
+            });
+
+            if (!allExpanded) {
+              return false;
+            }
+
+            // 一括折りたたみテスト（ルートノード以外）
+            manager.collapseAllNodes();
+            const rootExpanded = !manager.getNodeInfo(rootId).isCollapsed;
+            const childrenCollapsed = nodeIds.slice(1).every(nodeId => {
+              return manager.getNodeInfo(nodeId).isCollapsed;
+            });
+
+            return rootExpanded && childrenCollapsed;
+          }
+        ),
+        { numRuns: 20 }
+      );
+    });
+
+    it('折りたたみ切り替え操作で状態が正しく反転される', () => {
+      fc.assert(
+        fc.property(
+          fc.array(nodeIdArbitrary, { minLength: 1, maxLength: 6 }),
+          fc.array(fc.boolean(), { minLength: 1, maxLength: 6 }),
+          fc.array(fc.integer({ min: 0, max: 5 }), {
+            minLength: 1,
+            maxLength: 10,
+          }),
+          (
+            nodeIds: NodeId[],
+            initialStates: boolean[],
+            toggleIndices: number[]
+          ) => {
+            const manager = new MindMapStateManager();
+
+            // ノードを追加
+            nodeIds.forEach(nodeId => {
+              manager.addNode(nodeId, { text: `Node ${nodeId}` });
+            });
+
+            // 初期状態を設定
+            const stateCount = Math.min(nodeIds.length, initialStates.length);
+            for (let i = 0; i < stateCount; i++) {
+              manager.setNodeCollapsed(nodeIds[i], initialStates[i]);
+            }
+
+            // 切り替え操作を実行
+            toggleIndices.forEach(index => {
+              if (index < nodeIds.length) {
+                const nodeId = nodeIds[index];
+                const beforeState = manager.getNodeInfo(nodeId).isCollapsed;
+
+                manager.toggleNodeCollapsed(nodeId);
+
+                const afterState = manager.getNodeInfo(nodeId).isCollapsed;
+
+                // 状態が正しく反転されていることを検証
+                if (beforeState === afterState) {
+                  return false;
+                }
+              }
+            });
+
+            return true;
+          }
+        ),
+        { numRuns: 30 }
+      );
     });
   });
 });

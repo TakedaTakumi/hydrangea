@@ -1,9 +1,11 @@
 /**
  * MindMapStateManager の選択状態管理機能のテスト
  * 選択・選択解除・複数選択・選択状態の変更イベント等をテスト
+ * プロパティベーステストにより、ランダムな選択操作でも一貫性を保つことを検証
  */
 
 import { describe, it, expect, beforeEach } from 'bun:test';
+import fc from 'fast-check';
 import { MindMapStateManager } from '../../../src/core/mindmap-state-manager';
 import { MindMapEventType } from '../../../src/types/event';
 import type { NodeId } from '../../../src/types';
@@ -347,6 +349,194 @@ describe('MindMapStateManager - 選択状態管理', () => {
 
       // 2回イベントが発行される（選択時と選択解除時）
       expect(eventCount).toBe(2);
+    });
+  });
+
+  describe('プロパティベーステスト - 選択状態の堅牢性', () => {
+    // ノードIDジェネレータ
+    const nodeIdArbitrary = fc
+      .string({ minLength: 8, maxLength: 12 })
+      .map(s => `node_${s}` as NodeId);
+
+    it('任意のノード選択シーケンスで選択状態の一貫性が保たれる', () => {
+      fc.assert(
+        fc.property(
+          fc.array(nodeIdArbitrary, { minLength: 1, maxLength: 10 }),
+          fc.array(fc.boolean(), { minLength: 1, maxLength: 10 }),
+          (nodeIds: NodeId[], addToSelectionFlags: boolean[]) => {
+            const manager = new MindMapStateManager();
+
+            // ノードを追加
+            nodeIds.forEach(nodeId => {
+              manager.addNode(nodeId, { text: `Node ${nodeId}` });
+            });
+
+            const operationCount = Math.min(
+              nodeIds.length,
+              addToSelectionFlags.length
+            );
+            let expectedSelectedCount = 0;
+
+            // 選択操作を実行
+            for (let i = 0; i < operationCount; i++) {
+              const nodeId = nodeIds[i];
+              const addToSelection = addToSelectionFlags[i];
+
+              manager.selectNode(nodeId, addToSelection);
+
+              if (addToSelection) {
+                expectedSelectedCount++;
+              } else {
+                expectedSelectedCount = 1; // 単一選択の場合
+              }
+
+              const selectionState = manager.getSelectionState();
+              const actualSelectedCount = selectionState.selectedNodeIds.size;
+
+              // 選択数が期待値と一致することを検証
+              if (actualSelectedCount !== expectedSelectedCount) {
+                return false;
+              }
+
+              // プライマリノードが設定されていることを検証
+              if (selectionState.primaryNodeId !== nodeId) {
+                return false;
+              }
+            }
+
+            return true;
+          }
+        ),
+        { numRuns: 50 }
+      );
+    });
+
+    it('ランダムな選択解除操作で状態の一貫性が保たれる', () => {
+      fc.assert(
+        fc.property(
+          fc.array(nodeIdArbitrary, { minLength: 3, maxLength: 8 }),
+          fc.array(fc.integer({ min: 0, max: 7 })),
+          (nodeIds: NodeId[], deselectIndices: number[]) => {
+            const manager = new MindMapStateManager();
+
+            // ノードを追加
+            nodeIds.forEach(nodeId => {
+              manager.addNode(nodeId, { text: `Node ${nodeId}` });
+            });
+
+            // 全てのノードを選択（複数選択）
+            nodeIds.forEach((nodeId, index) => {
+              manager.selectNode(nodeId, index > 0);
+            });
+
+            let currentSelectedCount = nodeIds.length;
+
+            // ランダムに選択解除
+            deselectIndices.forEach(index => {
+              if (index < nodeIds.length) {
+                const nodeId = nodeIds[index];
+                const wasSelected = manager
+                  .getSelectionState()
+                  .selectedNodeIds.has(nodeId);
+
+                manager.deselectNode(nodeId);
+
+                if (wasSelected) {
+                  currentSelectedCount--;
+                }
+
+                const selectionState = manager.getSelectionState();
+                const actualSelectedCount = selectionState.selectedNodeIds.size;
+
+                // 選択数が期待値と一致することを検証
+                if (actualSelectedCount !== currentSelectedCount) {
+                  return false;
+                }
+
+                // 選択されたノードが存在する場合、プライマリノードが設定されていることを検証
+                if (actualSelectedCount > 0 && !selectionState.primaryNodeId) {
+                  return false;
+                }
+              }
+            });
+
+            return true;
+          }
+        ),
+        { numRuns: 30 }
+      );
+    });
+
+    it('複数選択と単一選択の切り替えで選択モードが正しく管理される', () => {
+      fc.assert(
+        fc.property(
+          fc.array(nodeIdArbitrary, { minLength: 2, maxLength: 6 }),
+          fc.array(fc.boolean()),
+          (nodeIds: NodeId[], selectionModes: boolean[]) => {
+            const manager = new MindMapStateManager();
+
+            // ノードを追加
+            nodeIds.forEach(nodeId => {
+              manager.addNode(nodeId, { text: `Node ${nodeId}` });
+            });
+
+            const operationCount = Math.min(
+              nodeIds.length,
+              selectionModes.length
+            );
+
+            for (let i = 0; i < operationCount; i++) {
+              const nodeId = nodeIds[i];
+              const addToSelection = selectionModes[i] && i > 0; // 最初は常に単一選択
+
+              manager.selectNode(nodeId, addToSelection);
+
+              const selectionState = manager.getSelectionState();
+              const expectedMode =
+                addToSelection && selectionState.selectedNodeIds.size > 1
+                  ? 'multiple'
+                  : 'single';
+
+              // 選択モードが期待値と一致することを検証
+              if (selectionState.selectionMode !== expectedMode) {
+                return false;
+              }
+            }
+
+            return true;
+          }
+        ),
+        { numRuns: 40 }
+      );
+    });
+
+    it('存在しないノードの操作でエラーハンドリングが正しく動作する', () => {
+      fc.assert(
+        fc.property(
+          nodeIdArbitrary,
+          fc.array(nodeIdArbitrary, { minLength: 1, maxLength: 5 }),
+          (invalidNodeId: NodeId, validNodeIds: NodeId[]) => {
+            const manager = new MindMapStateManager();
+
+            // 有効なノードのみ追加（invalidNodeIdは追加しない）
+            validNodeIds.forEach(nodeId => {
+              manager.addNode(nodeId, { text: `Node ${nodeId}` });
+            });
+
+            // 存在しないノードを選択しようとするとエラーが発生する
+            try {
+              manager.selectNode(invalidNodeId);
+              return false; // エラーが発生しなかった場合は失敗
+            } catch (error) {
+              // エラーが発生した場合は成功
+              return (
+                error instanceof Error && error.message.includes('not found')
+              );
+            }
+          }
+        ),
+        { numRuns: 30 }
+      );
     });
   });
 });
