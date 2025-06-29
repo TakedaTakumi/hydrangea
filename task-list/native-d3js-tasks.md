@@ -224,7 +224,7 @@ mindmap-simple-tool/
   - [x] 状態管理クラスの作成（core/state-manager.ts）
   - [x] 型安全なイベント発行・購読システム
 - [ ] マインドマップデータモデルの定義
-  - [ ] ノードデータ構造の設計（core/data-model.ts）
+  - [x] ノードデータ構造の設計（core/data-model.ts）
   - [ ] ツリー構造の管理クラス（型安全な実装）
   - [ ] ノードの一意 ID 生成機能（utils/helpers.ts）
   - [ ] バリデーション機能（utils/validators.ts、型ガード実装）
