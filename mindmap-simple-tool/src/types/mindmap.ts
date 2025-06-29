@@ -394,8 +394,8 @@ export const DEFAULT_MINDMAP_METADATA: MindMapMetadata = {
 
 /** デフォルトのマインドマップ設定 */
 export const DEFAULT_MINDMAP_SETTINGS: MindMapSettings = {
-  layoutType: LayoutType.TREE,
-  theme: Theme.LIGHT,
+  layoutType: 'tree' as LayoutType,
+  theme: 'light' as Theme,
   autoSave: true,
   autoSaveInterval: 30,
   showGrid: true,
@@ -411,12 +411,12 @@ export const DEFAULT_VIEWPORT: MindMapViewport = {
   maxZoom: 5.0,
   center: { x: 0, y: 0 },
   size: { width: 800, height: 600 },
-  zoomMode: ZoomMode.FIT_TO_VIEW,
+  zoomMode: 'fit' as ZoomMode,
 };
 
 /** デフォルトのレイアウト設定 */
 export const DEFAULT_LAYOUT_SETTINGS: LayoutSettings = {
-  type: LayoutType.TREE,
+  type: 'tree' as LayoutType,
   nodeSpacing: 100,
   levelSpacing: 150,
   direction: LayoutDirection.TOP_TO_BOTTOM,
@@ -426,7 +426,7 @@ export const DEFAULT_LAYOUT_SETTINGS: LayoutSettings = {
 
 /** デフォルトのエクスポート設定 */
 export const DEFAULT_EXPORT_SETTINGS: ExportSettings = {
-  format: FileFormat.YAML,
+  format: 'yaml' as FileFormat,
   includeBackground: false,
   selectedOnly: false,
 };
