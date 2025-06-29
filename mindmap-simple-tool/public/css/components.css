@@ -89,6 +89,35 @@
     @apply max-w-sm w-full bg-white dark:bg-gray-800 shadow-strong rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden;
   }
 
+  /* Modal Components */
+  .modal-overlay {
+    @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300;
+  }
+
+  .modal-container {
+    @apply bg-white dark:bg-gray-800 rounded-lg shadow-strong max-w-md w-full mx-4 overflow-hidden transform transition-all duration-300 scale-100;
+  }
+
+  .modal-header {
+    @apply px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between;
+  }
+
+  .modal-title {
+    @apply text-lg font-semibold text-gray-900 dark:text-white;
+  }
+
+  .modal-close {
+    @apply p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200;
+  }
+
+  .modal-body {
+    @apply px-6 py-4 text-gray-700 dark:text-gray-300;
+  }
+
+  .modal-footer {
+    @apply px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-end space-x-3;
+  }
+
   .notification-success {
     @apply border-l-4 border-green-500;
   }
