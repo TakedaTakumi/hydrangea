@@ -195,16 +195,16 @@ mindmap-simple-tool/
 
 ## 基本画面・レイアウト実装（Tailwind CSS）
 
-- [ ] HTML の基本構造作成（Tailwind クラス使用）
-  - [ ] ヘッダー部分（`flex justify-between items-center` 等）
-  - [ ] 3 ペイン構成のレイアウト
-    - [ ] 左ペイン: ツリービュー（`w-64 bg-gray-100 dark:bg-gray-800` 等）
-    - [ ] 中央ペイン: d3.js キャンバス（`flex-1 relative` 等）
-    - [ ] 右ペイン: ノード詳細・設定（`w-80 bg-gray-50 dark:bg-gray-900` 等）
+- [x] HTML の基本構造作成（Tailwind クラス使用）
+  - [x] ヘッダー部分（`flex justify-between items-center` 等）
+  - [x] 3 ペイン構成のレイアウト
+    - [x] 左ペイン: ツリービュー（`w-64 bg-gray-100 dark:bg-gray-800` 等）
+    - [x] 中央ペイン: d3.js キャンバス（`flex-1 relative` 等）
+    - [x] 右ペイン: ノード詳細・設定（`w-80 bg-gray-50 dark:bg-gray-900` 等）
 - [ ] Tailwind CSS レイアウトの実装
-  - [ ] CSS Grid を使った 3 ペインレイアウト（`grid grid-cols-[256px_1fr_320px]`）
-  - [ ] レスポンシブデザインの設定（`lg:grid-cols-1 md:grid-cols-[256px_1fr]`）
-  - [ ] ダークモード対応（`dark:` モディファイア）
+  - [x] CSS Grid を使った 3 ペインレイアウト（`grid grid-cols-[256px_1fr_320px]`）
+  - [x] レスポンシブデザインの設定（`lg:grid-cols-1 md:grid-cols-[256px_1fr]`）
+  - [x] ダークモード対応（`dark:` モディファイア）
   - [ ] ペインのリサイズ機能（`resize-x` 等、オプション）
 - [ ] Tailwind UI コンポーネントの作成
   - [ ] @apply ディレクティブによるボタンコンポーネント
