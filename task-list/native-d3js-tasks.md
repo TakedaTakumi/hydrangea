@@ -218,7 +218,7 @@ mindmap-simple-tool/
   - [x] ノード関連型定義（types/node.ts）
   - [x] マインドマップ関連型定義（types/mindmap.ts）
   - [x] UI 関連型定義（types/ui.ts）
-  - [ ] イベント関連型定義
+  - [x] イベント関連型定義
 - [ ] 基本的な状態管理クラスの作成
   - [ ] Observer Pattern の実装（core/event-emitter.ts）
   - [ ] 状態管理クラスの作成（core/state-manager.ts）

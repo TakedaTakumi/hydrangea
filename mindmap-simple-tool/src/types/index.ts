@@ -194,3 +194,59 @@ export type FileOperationResult<T = any> = {
 
 // UI関連型定義の再エクスポート
 export * from './ui';
+
+// イベント関連型定義の再エクスポート（型名競合を回避）
+export type {
+  BaseEvent,
+  CustomEvent,
+  // ノード関連イベント
+  NodeEventType,
+  NodeEventData,
+  NodeEvent,
+  // マインドマップ関連イベント
+  MindMapEventType,
+  MindMapEventData,
+  MindMapEvent,
+  // UI関連イベント（別名でエクスポート）
+  UIEventType,
+  UIEventData,
+  UIEvent as UIEventDetails,
+  // ファイル関連イベント
+  FileEventType,
+  FileEventData,
+  FileEvent,
+  // キーボード・マウス関連イベント
+  KeyboardEventType,
+  KeyboardEventData,
+  KeyboardEvent as KeyboardEventDetails,
+  MouseEventType,
+  MouseEventData,
+  MouseEvent as MouseEventDetails,
+  ModifierKeyState,
+  // ドラッグ&ドロップ関連イベント
+  DragDropEventType,
+  DragDropEventData,
+  DragDropEvent,
+  // アニメーション関連イベント
+  AnimationEventType,
+  AnimationEventData,
+  AnimationEvent as AnimationEventDetails,
+  // エラー関連イベント
+  ErrorEventType,
+  ErrorEventData,
+  ErrorEvent as ErrorEventDetails,
+  // パフォーマンス関連イベント
+  PerformanceEventType,
+  PerformanceEventData,
+  PerformanceEvent,
+  // 統合型
+  AppEvent,
+  AppEventType,
+  EventEmitter,
+  EventBusConfig,
+  SubscriptionOptions,
+  EventMiddleware,
+  EventAggregatorConfig,
+  TypedEventMap,
+  TypedEventEmitter,
+} from './event';
