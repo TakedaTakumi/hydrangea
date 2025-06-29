@@ -462,7 +462,9 @@ export function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    const temp = shuffled[i];
+    shuffled[i] = shuffled[j]!;
+    shuffled[j] = temp!;
   }
   return shuffled;
 }
@@ -576,13 +578,18 @@ export function setNestedValue(obj: any, path: string, value: any): void {
 
   for (let i = 0; i < keys.length - 1; i++) {
     const key = keys[i];
+    if (!key) continue; // 空のキーをスキップ
+
     if (!(key in current) || typeof current[key] !== 'object') {
       current[key] = {};
     }
     current = current[key];
   }
 
-  current[keys[keys.length - 1]] = value;
+  const lastKey = keys[keys.length - 1];
+  if (lastKey) {
+    current[lastKey] = value;
+  }
 }
 
 // ============================================================================
@@ -714,6 +721,8 @@ export function isEmpty(obj: any): boolean {
 export function isValidPoint2D(value: any): value is Point2D {
   return (
     isObject(value) &&
+    'x' in value &&
+    'y' in value &&
     typeof value.x === 'number' &&
     typeof value.y === 'number' &&
     !isNaN(value.x) &&
@@ -729,6 +738,8 @@ export function isValidPoint2D(value: any): value is Point2D {
 export function isValidSize(value: any): value is Size {
   return (
     isObject(value) &&
+    'width' in value &&
+    'height' in value &&
     typeof value.width === 'number' &&
     typeof value.height === 'number' &&
     !isNaN(value.width) &&
