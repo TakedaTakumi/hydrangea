@@ -220,7 +220,7 @@ mindmap-simple-tool/
   - [x] UI 関連型定義（types/ui.ts）
   - [x] イベント関連型定義
 - [ ] 基本的な状態管理クラスの作成
-  - [ ] Observer Pattern の実装（core/event-emitter.ts）
+  - [x] Observer Pattern の実装（core/event-emitter.ts）
   - [ ] 状態管理クラスの作成（core/state-manager.ts）
   - [ ] 型安全なイベント発行・購読システム
 - [ ] マインドマップデータモデルの定義
