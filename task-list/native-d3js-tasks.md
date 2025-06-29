@@ -216,7 +216,7 @@ mindmap-simple-tool/
 - [ ] TypeScript 型定義の作成
   - [x] 基本型定義（types/index.ts）
   - [x] ノード関連型定義（types/node.ts）
-  - [ ] マインドマップ関連型定義（types/mindmap.ts）
+  - [x] マインドマップ関連型定義（types/mindmap.ts）
   - [ ] UI 関連型定義（types/ui.ts）
   - [ ] イベント関連型定義
 - [ ] 基本的な状態管理クラスの作成
