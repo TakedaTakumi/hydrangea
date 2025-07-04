@@ -246,7 +246,7 @@ mindmap-simple-tool/
 ### 基本描画システム
 
 - [ ] d3.js 基盤クラスの作成
-  - [ ] SVG キャンバスの初期化（mindmap/mindmap-renderer.ts）
+  - [x] SVG キャンバスの初期化（mindmap/mindmap-renderer.ts）
   - [ ] d3.js の型定義インポートと設定
   - [ ] ズーム・パン機能の実装（features/zoom-pan.ts、d3-zoom 使用）
   - [ ] 基本的なイベントハンドリング（型安全な実装）
