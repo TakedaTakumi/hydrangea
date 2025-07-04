@@ -122,52 +122,75 @@ export function renderMindMapNodes(
   // 再帰的にノードを描画
   function drawNode(node: MindMapNodeTree) {
     const { layout, style } = node;
+    // 状態に応じた色・太さ
+    let fill = colorToString(style.backgroundColor);
+    let stroke = colorToString(style.borderColor);
+    let strokeWidth = style.borderWidth;
+    let filter = '';
+    if (node.state.selected) {
+      stroke = getTailwindColor('blue', 500);
+      strokeWidth = style.borderWidth * 2;
+      filter = 'drop-shadow(0 0 6px #3b82f6)';
+    } else if (node.state.hovered) {
+      stroke = getTailwindColor('yellow', 500);
+      strokeWidth = style.borderWidth * 1.5;
+      filter = 'drop-shadow(0 0 4px #eab308)';
+    }
     // ノード形状描画（既存）
+    let shapeSel: d3.Selection<any, unknown, null, undefined>;
     switch (style.shape) {
       case NodeShape.RECTANGLE:
-        svg
+        shapeSel = svg
           .append('rect')
           .attr('x', layout.position.x)
           .attr('y', layout.position.y)
           .attr('width', layout.size.width)
           .attr('height', layout.size.height)
           .attr('rx', 0)
-          .attr('fill', colorToString(style.backgroundColor))
-          .attr('stroke', colorToString(style.borderColor))
-          .attr('stroke-width', style.borderWidth);
+          .attr('fill', fill)
+          .attr('stroke', stroke)
+          .attr('stroke-width', strokeWidth)
+          .attr('filter', filter)
+          .attr('data-id', node.id);
         break;
       case NodeShape.ROUNDED_RECTANGLE:
-        svg
+        shapeSel = svg
           .append('rect')
           .attr('x', layout.position.x)
           .attr('y', layout.position.y)
           .attr('width', layout.size.width)
           .attr('height', layout.size.height)
           .attr('rx', style.borderRadius)
-          .attr('fill', colorToString(style.backgroundColor))
-          .attr('stroke', colorToString(style.borderColor))
-          .attr('stroke-width', style.borderWidth);
+          .attr('fill', fill)
+          .attr('stroke', stroke)
+          .attr('stroke-width', strokeWidth)
+          .attr('filter', filter)
+          .attr('data-id', node.id);
         break;
       case NodeShape.CIRCLE:
-        svg
+        shapeSel = svg
           .append('circle')
           .attr('cx', layout.position.x + layout.size.width / 2)
           .attr('cy', layout.position.y + layout.size.height / 2)
           .attr('r', Math.min(layout.size.width, layout.size.height) / 2)
-          .attr('fill', colorToString(style.backgroundColor))
-          .attr('stroke', colorToString(style.borderColor))
-          .attr('stroke-width', style.borderWidth);
+          .attr('fill', fill)
+          .attr('stroke', stroke)
+          .attr('stroke-width', strokeWidth)
+          .attr('filter', filter)
+          .attr('data-id', node.id);
         break;
       case NodeShape.ELLIPSE:
-        svg
+        shapeSel = svg
           .append('ellipse')
           .attr('cx', layout.position.x + layout.size.width / 2)
           .attr('cy', layout.position.y + layout.size.height / 2)
           .attr('rx', layout.size.width / 2)
           .attr('ry', layout.size.height / 2)
-          .attr('fill', colorToString(style.backgroundColor))
-          .attr('stroke', colorToString(style.borderColor))
-          .attr('stroke-width', style.borderWidth);
+          .attr('fill', fill)
+          .attr('stroke', stroke)
+          .attr('stroke-width', strokeWidth)
+          .attr('filter', filter)
+          .attr('data-id', node.id);
         break;
       default:
         return;
