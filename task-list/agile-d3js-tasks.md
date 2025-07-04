@@ -20,8 +20,8 @@
 
 ### タスク
 
-- [ ] d3-hierarchy を使ったツリー構造の処理
-  - [ ] 型定義（types/mindmap.ts, types/node.ts）を拡張し、ツリー構造を表現
+- [x] d3-hierarchy を使ったツリー構造の処理
+  - [x] 型定義（types/mindmap.ts, types/node.ts）を拡張し、ツリー構造を表現
   - [ ] サンプルデータを使ったツリー構築
 - [ ] ノードの基本形状描画（矩形、円形、角丸等）
   - [ ] SVG 要素でノードを描画（mindmap/mindmap-renderer.ts）

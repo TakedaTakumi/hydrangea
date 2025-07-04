@@ -108,6 +108,26 @@ export interface MindMapNode extends BaseEntity {
   metadata: NodeMetadata;
 }
 
+/**
+ * d3-hierarchy 互換のツリー構造型
+ * MindMapNodeTree は children プロパティを持つ再帰型
+ */
+export interface MindMapNodeTree extends Omit<MindMapNode, 'childrenIds'> {
+  /** 子ノード（再帰的） */
+  children: MindMapNodeTree[];
+}
+
+/**
+ * MindMapNodeTree 型ガード
+ */
+export function isMindMapNodeTree(node: unknown): node is MindMapNodeTree {
+  if (typeof node !== 'object' || node === null) return false;
+  if (!('id' in node) || !('text' in node)) return false;
+  if (!Array.isArray((node as any).children)) return false;
+  // 子ノードも再帰的にチェック
+  return (node as any).children.every(isMindMapNodeTree);
+}
+
 // ============================================================================
 // ノード作成・更新用の型
 // ============================================================================
