@@ -111,11 +111,13 @@ export class MindMapRenderer {
   }
 }
 
-/**
- * MindMapNodeTree を SVG で描画（ノード形状: 矩形/円形/角丸/楕円）
- * @param svg SVG selection
- * @param root ルートノードツリー
- */
+/** MindMapNodeTree → d3-hierarchy変換 */
+function toD3Hierarchy(
+  root: MindMapNodeTree
+): d3.HierarchyNode<MindMapNodeTree> {
+  return d3.hierarchy(root, d => d.children);
+}
+
 export function renderMindMapNodes(
   svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
   root: MindMapNodeTree
@@ -125,17 +127,18 @@ export function renderMindMapNodes(
   const svgWidth = svgNode ? svgNode.clientWidth || 800 : 800;
   const svgHeight = svgNode ? svgNode.clientHeight || 600 : 600;
 
-  // ルートノードを中央に配置
-  if (root && root.layout && root.layout.position) {
-    root.layout.position.x = Math.max(
-      0,
-      (svgWidth - root.layout.size.width) / 2
-    );
-    root.layout.position.y = Math.max(
-      0,
-      (svgHeight - root.layout.size.height) / 2
-    );
-  }
+  // d3-treeレイアウト適用
+  const treeLayout = d3.tree<MindMapNodeTree>().size([svgHeight, svgWidth]);
+  const d3Root = toD3Hierarchy(root);
+  treeLayout(d3Root);
+
+  // d3-treeのx/yをMindMapNodeTreeのlayout.positionに反映
+  d3Root.each(node => {
+    if (typeof node.x === 'number' && typeof node.y === 'number') {
+      node.data.layout.position.x = node.y;
+      node.data.layout.position.y = node.x;
+    }
+  });
 
   // 再帰的にノードを描画
   function drawNode(node: MindMapNodeTree) {
