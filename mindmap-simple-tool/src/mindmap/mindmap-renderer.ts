@@ -5,6 +5,7 @@ import * as d3 from 'd3';
 import type { MindMapNodeTree } from '../types/node';
 import type { RGBAColor, Color } from '../types/index';
 import { NodeShape } from '../types/index';
+import { getTailwindColor } from '../config/theme';
 
 /**
  * Color型（HEX or RGBA）→ SVG用カラー文字列
@@ -226,3 +227,7 @@ function fontSizeToPx(fontSize: import('../types/index').FontSize): number {
       return 16;
   }
 }
+
+// サンプル: デフォルトNodeStyleにTailwindカラーを適用する例
+// 例: 赤色ノード
+// const redNodeStyle = { ...DEFAULT_NODE_STYLE, backgroundColor: getTailwindColor('red', 400) };

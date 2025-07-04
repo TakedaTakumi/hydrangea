@@ -66,3 +66,54 @@ if (typeof window !== 'undefined') {
   // ページ読み込み時にテーマを初期化
   initializeTheme();
 }
+
+// Tailwind CSS カラーパレット（主要色のみ抜粋）
+export const TAILWIND_COLORS = {
+  gray: {
+    50: '#f9fafb',
+    100: '#f3f4f6',
+    200: '#e5e7eb',
+    300: '#d1d5db',
+    400: '#9ca3af',
+    500: '#6b7280',
+    600: '#4b5563',
+    700: '#374151',
+    800: '#1f2937',
+    900: '#111827',
+  },
+  red: {
+    400: '#f87171',
+    500: '#ef4444',
+    600: '#dc2626',
+  },
+  blue: {
+    400: '#60a5fa',
+    500: '#3b82f6',
+    600: '#2563eb',
+  },
+  green: {
+    400: '#34d399',
+    500: '#10b981',
+    600: '#059669',
+  },
+  yellow: {
+    400: '#facc15',
+    500: '#eab308',
+    600: '#ca8a04',
+  },
+  // ...必要に応じて追加
+} as const;
+
+export type TailwindColorName = keyof typeof TAILWIND_COLORS;
+export type TailwindColorShade<C extends TailwindColorName> =
+  keyof (typeof TAILWIND_COLORS)[C];
+
+/**
+ * Tailwindカラー名・シェードからHEX値を取得（型安全）
+ */
+export function getTailwindColor<
+  C extends TailwindColorName,
+  S extends TailwindColorShade<C>,
+>(color: C, shade: S): (typeof TAILWIND_COLORS)[C][S] {
+  return TAILWIND_COLORS[color][shade];
+}
