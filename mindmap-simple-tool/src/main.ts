@@ -16,8 +16,7 @@ function main(): void {
     // アプリケーションの初期化
     app.initialize();
 
-    // UIデモ用: mindmap-canvasにサンプルツリーを描画
-    import('./ui/demo-render');
+    // demo-render.ts の import を削除（本体ロジックに統合済み）
 
     // eslint-disable-next-line no-console
     console.log('✅ マインドマップアプリケーションが正常に起動しました');
