@@ -13,6 +13,13 @@ import type {
   UnsubscribeFunction,
 } from '../types';
 import { NodeEventType, MindMapEventType } from '../types';
+import { IdGenerator } from '../utils/helpers';
+import {
+  DEFAULT_NODE_STYLE,
+  DEFAULT_NODE_LAYOUT,
+  DEFAULT_NODE_STATE,
+  DEFAULT_NODE_METADATA,
+} from '../types/node';
 
 // ============================================================================
 // 状態管理の基本インターフェース
@@ -319,6 +326,26 @@ export class MindMapStateManager {
 
     // ストア間の同期を設定
     this.setupStoreSynchronization();
+
+    // ルートノードが存在しない場合は自動生成
+    if (initialState.nodes.size === 0 || !initialState.rootNodeId) {
+      const rootId = IdGenerator.generateUuidV7Id('node');
+      const now = new Date();
+      const rootNode: MindMapNode = {
+        id: rootId,
+        text: 'ルートノード',
+        parentId: null,
+        childrenIds: [],
+        style: { ...DEFAULT_NODE_STYLE },
+        layout: { ...DEFAULT_NODE_LAYOUT },
+        state: { ...DEFAULT_NODE_STATE },
+        metadata: { ...DEFAULT_NODE_METADATA },
+        createdAt: now,
+        updatedAt: now,
+      };
+      initialState.nodes.set(rootId, rootNode);
+      initialState.rootNodeId = rootId;
+    }
   }
 
   // ============================================================================
