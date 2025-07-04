@@ -47,4 +47,32 @@ export class MindMapRenderer {
       .attr('height', this.height)
       .attr('viewBox', `0 0 ${this.width} ${this.height}`);
   }
+
+  /**
+   * SVGにイベントハンドラを追加（例: クリック、ダブルクリック、コンテキストメニュー等）
+   * @param type イベントタイプ（例: 'click'）
+   * @param handler イベントハンドラ関数
+   */
+  on<K extends keyof SVGElementEventMap>(
+    type: K,
+    handler: (event: SVGElementEventMap[K]) => void
+  ): void {
+    const node = this.svg.node();
+    if (node) {
+      node.addEventListener(type, handler as EventListener);
+    }
+  }
+
+  /**
+   * SVGからイベントハンドラを削除
+   */
+  off<K extends keyof SVGElementEventMap>(
+    type: K,
+    handler: (event: SVGElementEventMap[K]) => void
+  ): void {
+    const node = this.svg.node();
+    if (node) {
+      node.removeEventListener(type, handler as EventListener);
+    }
+  }
 }

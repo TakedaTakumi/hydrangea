@@ -249,8 +249,8 @@ mindmap-simple-tool/
   - [x] SVG キャンバスの初期化（mindmap/mindmap-renderer.ts）
   - [x] d3.js の型定義インポートと設定
   - [x] ズーム・パン機能の実装（features/zoom-pan.ts、d3-zoom 使用）
-  - [ ] 基本的なイベントハンドリング（型安全な実装）
-  - [ ] キャンバスサイズの自動調整
+  - [x] 基本的なイベントハンドリング（型安全な実装）
+  - [x] キャンバスサイズの自動調整
 
 ### ノード描画
 
