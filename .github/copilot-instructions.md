@@ -12,7 +12,7 @@
 ### コード品質基準
 
 - TypeScript の型安全性を最大活用
-- ESLint/Biome のルールを厳格に適用
+- Biome のルールを厳格に適用
 - 80%以上のテストカバレッジを目指す
 - 自己文書化コードを書く
 
@@ -188,7 +188,7 @@ const messages: Record<string, LocalizedText> = {
 
 ### 必須ツール
 
-- **Vite**: 高速なビルドシステム
+- **Vite**: 高速なビルドシステム + SSG対応
 - **Vitest**: TypeScript 対応テストフレームワーク
 - **Playwright**: E2E テスト自動化
 - **Biome**: 統合リンター/フォーマッター
@@ -199,6 +199,13 @@ const messages: Record<string, LocalizedText> = {
 - **Chromatic**: 視覚的回帰テスト
 - **Bundlesize**: バンドルサイズ監視
 - **Lighthouse CI**: パフォーマンス監視
+
+### 静的サイト生成（SSG）対応
+
+- **Vite Build**: 本番用静的ファイル生成
+- **相対パス設定**: 任意のディレクトリでの動作保証
+- **アセット最適化**: 画像・CSS・JSの最適化とハッシュ化
+- **GitHub Pages/Netlify/Vercel**: 静的ホスティング対応
 
 ## コミット規約
 
@@ -228,6 +235,7 @@ chore: その他のメンテナンス
 - **パフォーマンス**: 描画処理の効率性
 - **セキュリティ**: XSS 対策やバリデーション
 - **アクセシビリティ**: ARIA 属性とキーボード対応
+- **静的ファイル生成**: ビルド設定とデプロイ可能性の確認
 
 ## 継続的改善
 
@@ -237,6 +245,8 @@ chore: その他のメンテナンス
 - 描画パフォーマンスの測定
 - テストカバレッジの維持
 - 技術的負債の可視化
+- **静的ファイル生成時間とサイズの監視**
+- **デプロイ成功率の追跡**
 
 ### 定期的な見直し
 
@@ -389,3 +399,97 @@ class ProductionNodeRenderer {
 2. **ノードの追加・削除** - 基本的な CRUD 操作
 3. **簡単な移動・配置** - ドラッグ&ドロップ
 4. **ファイル保存・読み込み** - データの永続化
+5. **静的ファイル生成** - デプロイ可能な成果物の生成
+
+---
+
+## 静的サイト生成（SSG）実装指針
+
+### Vite SSG 設定の重要ポイント
+
+```typescript
+// vite.config.ts の基本設定
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['d3']
+        }
+      }
+    }
+  },
+  base: './', // 重要：相対パスでの静的ファイル生成
+  publicDir: 'public' // 静的アセットのディレクトリ
+})
+```
+
+### 静的ファイル生成の品質基準
+
+- **相対パス対応**: 任意のディレクトリに配置可能
+- **アセット最適化**: 画像・CSS・JSの最適化とハッシュ化
+- **バンドルサイズ制限**: 初期ロード1MB以下
+- **SEO対応**: 適切なmeta情報の埋め込み
+- **プログレッシブエンハンスメント**: JavaScript無効時の基本動作
+
+### デプロイ環境別設定
+
+```typescript
+// GitHub Pages用設定
+const isGitHubPages = process.env.NODE_ENV === 'github-pages'
+
+export default defineConfig({
+  base: isGitHubPages ? '/repository-name/' : './',
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets'
+  }
+})
+```
+
+### 静的ファイル生成のテスト戦略
+
+- **ビルド成功テスト**: npm run build の正常実行
+- **静的ファイル整合性テスト**: 生成ファイルの存在確認
+- **相対パステスト**: サブディレクトリでの動作確認
+- **パフォーマンステスト**: バンドルサイズとロード時間測定
+- **デプロイテスト**: 実際のホスティング環境での動作確認
+
+### CI/CD での静的ファイル生成
+
+```yaml
+# GitHub Actions でのビルド・デプロイ例
+name: Build and Deploy
+on:
+  push:
+    branches: [main]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm ci
+      - name: Build static files
+        run: npm run build
+      - name: Test static files
+        run: |
+          npx http-server dist &
+          sleep 5
+          curl -f http://localhost:8080/
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+```
+
+---

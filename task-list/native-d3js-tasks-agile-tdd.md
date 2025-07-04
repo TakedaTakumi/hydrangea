@@ -28,6 +28,9 @@
 - [ ] ドキュメント（README、API 仕様等）が更新されている
 - [ ] 本番環境での動作確認が完了している
 - [ ] パフォーマンス要件を満たしている（描画速度、メモリ使用量）
+- [ ] **静的ファイルが正常に生成される（`npm run build`）**
+- [ ] **生成された静的ファイルが Web サーバーで正常に動作する**
+- [ ] **バンドルサイズが適切な範囲内（目安：初期ロード 1MB 以下）**
 
 ---
 
@@ -40,23 +43,51 @@
 
 - [ ] プロジェクトディレクトリ構造の作成
 - [ ] package.json, tsconfig.json, vite.config.ts の設定
+- [ ] **Vite での静的ファイル生成設定（SSG 対応）**
+- [ ] **ビルド最適化設定（バンドルサイズ削減、コード分割）**
 - [ ] TypeScript + d3.js の型定義セットアップ
 - [ ] Vitest + jsdom によるテスト環境構築
 - [ ] Biome の設定
 - [ ] 最初の E2E テスト（Playwright）
 - [ ] 基本的な HTML テンプレート（index.html）の作成
+- [ ] **静的ファイル生成テスト（`npm run build`の動作確認）**
+- [ ] **デプロイ用ディレクトリ構造の確認**
 - [ ] 受け入れ基準：ローカル開発サーバーで index.html が表示される
+- [ ] **受け入れ基準：`npm run build`で静的ファイルが生成される**
 
 **技術スタック詳細**:
 
 ```
 - Node.js 22+
 - TypeScript 5.x
-- Vite (ビルドツール)
+- Vite (ビルドツール + SSG対応)
 - d3.js v7+
 - Vitest (テストフレームワーク)
 - Playwright (E2Eテスト)
-- Biome 
+- Biome
+```
+
+**Vite 設定例**:
+
+```typescript
+// vite.config.ts
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  build: {
+    outDir: "dist",
+    assetsDir: "assets",
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["d3"],
+        },
+      },
+    },
+  },
+  base: "./", // 相対パスでの静的ファイル生成
+});
 ```
 
 ### イテレーション 1: マインドマップの最小表示
@@ -201,6 +232,95 @@ class FileManager {
 }
 ```
 
+### イテレーション 6: 静的ファイルデプロイ対応
+
+**見積もり**: 2-3 日  
+**優先度**: 中
+
+- [ ] **静的ファイルデプロイのテストを書く**
+- [ ] **ビルド設定の最適化（バンドルサイズ削減）**
+- [ ] **相対パス対応（任意のディレクトリでの動作確認）**
+- [ ] **静的ホスティングサービス対応設定**
+- [ ] **GitHub Pages / Netlify / Vercel 対応**
+- [ ] **デプロイ用 CI/CD 設定**
+- [ ] **本番環境での動作確認**
+- [ ] コードのリファクタリング
+- [ ] 受け入れ基準：静的ファイルが正常に生成される
+- [ ] **受け入れ基準：生成された静的ファイルが任意の Web サーバーで動作する**
+
+**技術詳細**:
+
+```typescript
+// package.json スクリプト例
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "deploy": "npm run build && gh-pages -d dist"
+  }
+}
+```
+
+**デプロイ用設定例**:
+
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy to GitHub Pages
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/deploy-pages@v1
+        with:
+          artifact_name: dist
+```
+
+---
+
+## 静的ファイル生成の確認項目
+
+### ビルド成果物チェックリスト
+
+- [ ] **index.html が正常に生成される**
+- [ ] **JavaScript バンドルが最適化されている**
+- [ ] **CSS が適切にバンドルされている**
+- [ ] **d3.js などの依存関係が正しく含まれている**
+- [ ] **相対パスでリソースが参照されている**
+- [ ] **ソースマップが生成されている（デバッグ用）**
+- [ ] **gzip 圧縮時のファイルサイズが適切**
+
+### デプロイ環境での動作確認
+
+- [ ] **ローカルの HTTP サーバーで動作確認**
+- [ ] **GitHub Pages での動作確認**
+- [ ] **Netlify での動作確認**
+- [ ] **Apache/Nginx での動作確認**
+- [ ] **サブディレクトリでの動作確認**
+
+**確認用コマンド例**:
+
+```bash
+# ローカル確認
+npm run build
+npx http-server dist
+
+# サブディレクトリ確認
+mkdir -p /tmp/webroot/subdir
+cp -r dist/* /tmp/webroot/subdir/
+npx http-server /tmp/webroot
+# http://localhost:8080/subdir/ でアクセス確認
+```
+
 ---
 
 ## 各イテレーションの進め方（TDD サイクル）
@@ -252,5 +372,33 @@ class FileManager {
 - 1 イテレーションごとに動くソフトウェア・テスト・ドキュメントを必ず残す
 - 受け入れ基準は常に明文化し、関係者と合意する
 - テストコードは設計の一部として扱う
+- **静的ファイル生成は各イテレーションで確認し、デプロイ可能性を保つ**
+- **本番環境（静的ホスティング）での動作確認を定期的に実施する**
+
+---
+
+## 静的ファイル生成・デプロイのベストプラクティス
+
+### Vite SSG 設定のポイント
+
+1. **相対パス設定**: `base: './'` で任意のディレクトリに配置可能
+2. **アセット最適化**: 画像・フォントの最適化とハッシュ化
+3. **コード分割**: 必要な部分のみ読み込むチャンク設定
+4. **Tree Shaking**: 未使用コードの除去
+5. **圧縮**: Gzip/Brotli 圧縮対応
+
+### デプロイ環境別の考慮事項
+
+- **GitHub Pages**: `base` 設定とリポジトリ名の調整
+- **Netlify**: `_redirects` ファイルでの SPA 対応
+- **Vercel**: `vercel.json` でのルーティング設定
+- **Apache/Nginx**: 静的ファイルの配信設定
+
+### パフォーマンス最適化
+
+- **初期ロード**: 1MB 以下を目標
+- **d3.js バンドル**: 必要な機能のみ import
+- **画像最適化**: WebP/AVIF 対応
+- **キャッシュ戦略**: 適切な Cache-Control ヘッダー設定
 
 ---
