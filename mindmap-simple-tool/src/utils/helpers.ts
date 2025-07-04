@@ -713,6 +713,27 @@ export function flattenMindMapTreeToMap(
   return map;
 }
 
+/**
+ * Map<NodeId, MindMapNode> から MindMapNodeTree へ変換
+ * @param nodes - ノードマップ
+ * @param rootId - ルートノードID
+ * @returns MindMapNodeTree | null
+ */
+export function buildMindMapTreeFromMap(
+  nodes: Map<string, MindMapNode>,
+  rootId: string | null
+): MindMapNodeTree | null {
+  if (!rootId || !nodes.has(rootId)) return null;
+  const build = (id: string): MindMapNodeTree => {
+    const node = nodes.get(id)!;
+    return {
+      ...node,
+      children: node.childrenIds.map(childId => build(childId)),
+    };
+  };
+  return build(rootId);
+}
+
 // ============================================================================
 // 型ガード関数
 // ============================================================================
