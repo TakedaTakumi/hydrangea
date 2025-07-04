@@ -121,6 +121,7 @@ export function renderMindMapNodes(
   // 再帰的にノードを描画
   function drawNode(node: MindMapNodeTree) {
     const { layout, style } = node;
+    // ノード形状描画（既存）
     switch (style.shape) {
       case NodeShape.RECTANGLE:
         svg
@@ -170,8 +171,39 @@ export function renderMindMapNodes(
       default:
         return;
     }
+    // ノード内テキスト描画
+    svg
+      .append('text')
+      .text(node.text)
+      .attr('x', layout.position.x + layout.size.width / 2)
+      .attr('y', layout.position.y + layout.size.height / 2)
+      .attr('fill', colorToString(style.textColor))
+      .attr('font-size', fontSizeToPx(style.fontSize))
+      .attr('text-anchor', 'middle')
+      .attr('dominant-baseline', 'middle')
+      .attr('pointer-events', 'none');
     // 子ノードも描画
     node.children.forEach(drawNode);
   }
   drawNode(root);
+}
+
+/**
+ * NodeStyle.fontSize(enum) → px値へ変換
+ */
+function fontSizeToPx(fontSize: import('../types/index').FontSize): number {
+  switch (fontSize) {
+    case 'xs':
+      return 12;
+    case 'sm':
+      return 14;
+    case 'base':
+      return 16;
+    case 'lg':
+      return 20;
+    case 'xl':
+      return 24;
+    default:
+      return 16;
+  }
 }
