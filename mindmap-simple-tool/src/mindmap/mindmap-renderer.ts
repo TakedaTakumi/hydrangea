@@ -87,6 +87,26 @@ export class MindMapRenderer {
       node.removeEventListener(type, handler as EventListener);
     }
   }
+
+  /**
+   * ノード形状を動的に切り替えて再描画
+   * @param root ルートノードツリー
+   * @param shape 新しいノード形状
+   */
+  public updateNodeShape(
+    root: import('../types/node').MindMapNodeTree,
+    shape: import('../types/index').NodeShape
+  ) {
+    // すべてのノードの shape を一括変更
+    function setShape(node: import('../types/node').MindMapNodeTree) {
+      node.style.shape = shape;
+      node.children.forEach(setShape);
+    }
+    setShape(root);
+    // SVGをクリアして再描画
+    this.svg.selectAll('*').remove();
+    renderMindMapNodes(this.svg, root);
+  }
 }
 
 /**
