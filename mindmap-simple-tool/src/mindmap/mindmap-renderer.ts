@@ -6,6 +6,7 @@ import type { MindMapNodeTree } from '../types/node';
 import type { RGBAColor, Color } from '../types/index';
 import { NodeShape } from '../types/index';
 import { getTailwindColor } from '../config/theme';
+import type { MindMapLink } from '../types/mindmap';
 
 /**
  * Color型（HEX or RGBA）→ SVG用カラー文字列
@@ -249,6 +250,43 @@ function fontSizeToPx(fontSize: import('../types/index').FontSize): number {
     default:
       return 16;
   }
+}
+
+// MindMapNodeTree から d3-hierarchy tree を生成し、エッジ（リンク）を描画
+// @param svg SVG selection
+// @param root ルートノードツリー
+// @param linkType 'curve' | 'line' で曲線/直線切り替え
+export function renderMindMapLinks(
+  svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
+  root: MindMapNodeTree,
+  linkType: 'curve' | 'line' = 'curve',
+  linkStyle?: Partial<MindMapLink>
+) {
+  // d3-hierarchyでtree構造化
+  const rootHierarchy = d3.hierarchy(root);
+  const treeLayout = d3.tree<any>().size([800, 600]); // 仮サイズ
+  const treeData = treeLayout(rootHierarchy);
+  // d3-linkでエッジ生成
+  const linkGen =
+    linkType === 'curve' ? d3.linkHorizontal() : d3.linkVertical();
+  svg
+    .selectAll('path.mindmap-link')
+    .data(treeData.links())
+    .enter()
+    .append('path')
+    .attr('class', 'mindmap-link')
+    .attr('d', (d: any) =>
+      linkGen({
+        source: [d.source.y, d.source.x],
+        target: [d.target.y, d.target.x],
+      })
+    )
+    .attr('fill', 'none')
+    .attr('stroke', (d: any) =>
+      linkStyle?.color ? colorToString(linkStyle.color) : '#888'
+    )
+    .attr('stroke-width', linkStyle?.strokeWidth || 2)
+    .attr('stroke-dasharray', linkStyle?.strokeDasharray || '');
 }
 
 // サンプル: デフォルトNodeStyleにTailwindカラーを適用する例

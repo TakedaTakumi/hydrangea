@@ -10,6 +10,7 @@ import type {
   Rectangle,
   BaseEntity,
   ValidationResult,
+  Color,
 } from './index';
 import type { NodeCollection, NodeTreeStats, NodeEventData } from './node';
 import { LayoutType, ZoomMode, Theme, FileFormat } from './index';
@@ -446,3 +447,17 @@ export const DEFAULT_HISTORY_SETTINGS: HistorySettings = {
   recordBatchOperations: true,
   persistHistory: false,
 };
+
+/** エッジ（ノード間の線）を表現する型 */
+export interface MindMapLink {
+  /** 親ノードID */
+  source: NodeId;
+  /** 子ノードID */
+  target: NodeId;
+  /** 線の色 */
+  color?: Color;
+  /** 線の太さ */
+  strokeWidth?: number;
+  /** 線のスタイル（solid/dashed等） */
+  strokeDasharray?: string;
+}

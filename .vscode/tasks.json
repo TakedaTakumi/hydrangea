@@ -1,0 +1,12 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "ビルド＆起動テスト",
+      "command": "bun run --watch",
+      "group": "build",
+      "isBackground": true
+    }
+  ]
+}
