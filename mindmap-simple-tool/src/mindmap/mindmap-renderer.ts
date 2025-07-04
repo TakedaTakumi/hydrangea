@@ -171,11 +171,30 @@ export function renderMindMapNodes(
       default:
         return;
     }
-    // ノード内テキスト描画
+    // ノード内テキスト描画前にテキスト幅を計算し、ノードサイズを調整
+    const tempText = svg
+      .append('text')
+      .text(node.text)
+      .attr('font-size', fontSizeToPx(style.fontSize))
+      .attr('visibility', 'hidden')
+      .attr('x', -9999)
+      .attr('y', -9999);
+    const bbox = (tempText.node() as SVGTextElement).getBBox();
+    tempText.remove();
+    // テキスト幅+パディングでノード幅を自動調整
+    const padding = 24;
+    const minWidth = node.layout.minSize.width;
+    const maxWidth = node.layout.maxSize.width;
+    const newWidth = Math.max(
+      minWidth,
+      Math.min(bbox.width + padding, maxWidth)
+    );
+    node.layout.size.width = newWidth;
+    // ノード内テキスト描画（中央揃え）
     svg
       .append('text')
       .text(node.text)
-      .attr('x', layout.position.x + layout.size.width / 2)
+      .attr('x', layout.position.x + node.layout.size.width / 2)
       .attr('y', layout.position.y + layout.size.height / 2)
       .attr('fill', colorToString(style.textColor))
       .attr('font-size', fontSizeToPx(style.fontSize))
