@@ -4,7 +4,7 @@
     {
       "type": "shell",
       "label": "ビルド＆起動テスト",
-      "command": "bun run --watch",
+      "command": "bun run dev",
       "group": "build",
       "isBackground": true
     }
