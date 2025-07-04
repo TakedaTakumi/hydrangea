@@ -32,34 +32,35 @@ export class MindMapApp {
         const svg = document.getElementById(
           'mindmap-canvas'
         ) as SVGSVGElement | null;
+        console.log('[DEBUG] svg取得:', svg);
         if (svg) {
           const d3svg = require('d3').select(svg);
           const stateManager = getStateManager();
-
-          // 描画関数
-          const render = () => {
-            d3svg.selectAll('*').remove();
-            const nodes = stateManager.getNodes();
-            const rootId = stateManager.getState().rootNodeId;
-            const tree = buildMindMapTreeFromMap(nodes, rootId);
-            if (tree) {
-              renderMindMapLinks(d3svg, tree, 'curve', {
-                color: '#38bdf8',
-                strokeWidth: 3,
-                strokeDasharray: '6,3',
-              });
-              renderMindMapNodes(d3svg, tree);
-              svg.classList.remove('hidden');
-            }
-          };
-
-          // 初回描画
-          render();
-
-          // 状態変更時に再描画
-          this.unsubscribe = stateManager.subscribe(() => {
-            render();
-          });
+          const nodes = stateManager.getNodes();
+          const rootId = stateManager.getState().rootNodeId;
+          const tree = buildMindMapTreeFromMap(nodes, rootId);
+          console.log(
+            '[DEBUG] ノード数:',
+            nodes.size,
+            'ルートID:',
+            rootId,
+            'tree:',
+            tree
+          );
+          if (tree) {
+            renderMindMapLinks(d3svg, tree, 'curve', {
+              color: '#38bdf8',
+              strokeWidth: 3,
+              strokeDasharray: '6,3',
+            });
+            renderMindMapNodes(d3svg, tree);
+            console.log('[DEBUG] 描画完了');
+            svg.classList.remove('hidden');
+          } else {
+            console.log('[DEBUG] treeがnull、描画スキップ');
+          }
+        } else {
+          console.log('[DEBUG] svg要素が取得できませんでした');
         }
       }
 

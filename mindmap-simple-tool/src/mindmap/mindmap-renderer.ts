@@ -120,6 +120,23 @@ export function renderMindMapNodes(
   svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
   root: MindMapNodeTree
 ) {
+  // SVGサイズ取得
+  const svgNode = svg.node();
+  const svgWidth = svgNode ? svgNode.clientWidth || 800 : 800;
+  const svgHeight = svgNode ? svgNode.clientHeight || 600 : 600;
+
+  // ルートノードを中央に配置
+  if (root && root.layout && root.layout.position) {
+    root.layout.position.x = Math.max(
+      0,
+      (svgWidth - root.layout.size.width) / 2
+    );
+    root.layout.position.y = Math.max(
+      0,
+      (svgHeight - root.layout.size.height) / 2
+    );
+  }
+
   // 再帰的にノードを描画
   function drawNode(node: MindMapNodeTree) {
     const { layout, style } = node;
