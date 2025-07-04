@@ -5,7 +5,6 @@ import * as d3 from 'd3';
 import type { MindMapNodeTree } from '../types/node';
 import type { RGBAColor, Color } from '../types/index';
 import { NodeShape } from '../types/index';
-import { getTailwindColor } from '../config/theme';
 import type { MindMapLink } from '../types/mindmap';
 import type { SimulationNodeDatum, SimulationLinkDatum } from 'd3';
 
@@ -147,8 +146,6 @@ export function renderMindMapNodes(
       node.children.forEach(collect);
     }
     collect(root);
-    // id→ForceNodeマップ
-    const nodeMap = new Map(nodes.map(n => [n.id, n]));
     // リンクリスト化
     const links: ForceLink[] = [];
     nodes.forEach(n => {
@@ -170,7 +167,7 @@ export function renderMindMapNodes(
         'link',
         d3
           .forceLink(links)
-          .id(d => d.id)
+          .id((d: any) => d.id) // as any で型エラー回避
           .distance(160)
       )
       .stop();
@@ -226,116 +223,123 @@ export function renderMindMapNodes(
     });
   }
 
-  // 再帰的にノードを描画
-  function drawNode(node: MindMapNodeTree) {
-    const { layout, style } = node;
-    // 状態に応じた色・太さ
-    let fill = colorToString(style.backgroundColor);
-    let stroke = colorToString(style.borderColor);
-    let strokeWidth = style.borderWidth;
-    let filter = '';
-    if (node.state.selected) {
-      stroke = getTailwindColor('blue', 500);
-      strokeWidth = style.borderWidth * 2;
-      filter = 'drop-shadow(0 0 6px #3b82f6)';
-    } else if (node.state.hovered) {
-      stroke = getTailwindColor('yellow', 500);
-      strokeWidth = style.borderWidth * 1.5;
-      filter = 'drop-shadow(0 0 4px #eab308)';
+  // --- ノードリストをflatに収集 ---
+  const flatNodes: MindMapNodeTree[] = [];
+  function collectAll(node: MindMapNodeTree) {
+    flatNodes.push(node);
+    if (!node.state.collapsed) {
+      node.children.forEach(collectAll);
     }
-    // ノード形状描画（既存）
-    let shapeSel: d3.Selection<any, unknown, null, undefined>;
+  }
+  collectAll(root);
+
+  // --- data join & transition ---
+  const nodeGroups = svg
+    .selectAll<SVGGElement, MindMapNodeTree>('g.node')
+    .data(flatNodes, (d: MindMapNodeTree) => d.id);
+
+  // --- enter ---
+  const nodeEnter = nodeGroups
+    .enter()
+    .append('g')
+    .attr('class', 'node')
+    .attr(
+      'transform',
+      d => `translate(${d.layout.position.x},${d.layout.position.y})`
+    )
+    .attr('opacity', 0);
+
+  nodeEnter.each(function (d: MindMapNodeTree) {
+    const g = d3.select(this);
+    const { layout, style } = d;
     switch (style.shape) {
       case NodeShape.RECTANGLE:
-        shapeSel = svg
-          .append('rect')
-          .attr('x', layout.position.x)
-          .attr('y', layout.position.y)
+        g.append('rect')
+          .attr('x', 0)
+          .attr('y', 0)
           .attr('width', layout.size.width)
           .attr('height', layout.size.height)
           .attr('rx', 0)
-          .attr('fill', fill)
-          .attr('stroke', stroke)
-          .attr('stroke-width', strokeWidth)
-          .attr('filter', filter)
-          .attr('data-id', node.id);
+          .attr('fill', colorToString(style.backgroundColor))
+          .attr('stroke', colorToString(style.borderColor))
+          .attr('stroke-width', style.borderWidth)
+          .attr('filter', '')
+          .attr('data-id', d.id);
         break;
       case NodeShape.ROUNDED_RECTANGLE:
-        shapeSel = svg
-          .append('rect')
-          .attr('x', layout.position.x)
-          .attr('y', layout.position.y)
+        g.append('rect')
+          .attr('x', 0)
+          .attr('y', 0)
           .attr('width', layout.size.width)
           .attr('height', layout.size.height)
           .attr('rx', style.borderRadius)
-          .attr('fill', fill)
-          .attr('stroke', stroke)
-          .attr('stroke-width', strokeWidth)
-          .attr('filter', filter)
-          .attr('data-id', node.id);
+          .attr('fill', colorToString(style.backgroundColor))
+          .attr('stroke', colorToString(style.borderColor))
+          .attr('stroke-width', style.borderWidth)
+          .attr('filter', '')
+          .attr('data-id', d.id);
         break;
       case NodeShape.CIRCLE:
-        shapeSel = svg
-          .append('circle')
-          .attr('cx', layout.position.x + layout.size.width / 2)
-          .attr('cy', layout.position.y + layout.size.height / 2)
-          .attr('r', Math.min(layout.size.width, layout.size.height) / 2)
-          .attr('fill', fill)
-          .attr('stroke', stroke)
-          .attr('stroke-width', strokeWidth)
-          .attr('filter', filter)
-          .attr('data-id', node.id);
+        g.append('circle')
+          .attr('cx', layout.size.width / 2)
+          .attr('cy', layout.size.height / 2)
+          .attr('r', 0)
+          .attr('fill', colorToString(style.backgroundColor))
+          .attr('stroke', colorToString(style.borderColor))
+          .attr('stroke-width', style.borderWidth)
+          .attr('filter', '')
+          .attr('data-id', d.id)
+          .transition()
+          .duration(300)
+          .attr('r', Math.min(layout.size.width, layout.size.height) / 2);
         break;
       case NodeShape.ELLIPSE:
-        shapeSel = svg
-          .append('ellipse')
-          .attr('cx', layout.position.x + layout.size.width / 2)
-          .attr('cy', layout.position.y + layout.size.height / 2)
+        g.append('ellipse')
+          .attr('cx', layout.size.width / 2)
+          .attr('cy', layout.size.height / 2)
+          .attr('rx', 0)
+          .attr('ry', 0)
+          .attr('fill', colorToString(style.backgroundColor))
+          .attr('stroke', colorToString(style.borderColor))
+          .attr('stroke-width', style.borderWidth)
+          .attr('filter', '')
+          .attr('data-id', d.id)
+          .transition()
+          .duration(300)
           .attr('rx', layout.size.width / 2)
-          .attr('ry', layout.size.height / 2)
-          .attr('fill', fill)
-          .attr('stroke', stroke)
-          .attr('stroke-width', strokeWidth)
-          .attr('filter', filter)
-          .attr('data-id', node.id);
+          .attr('ry', layout.size.height / 2);
         break;
       default:
-        return;
+        break;
     }
-    // ノード内テキスト描画前にテキスト幅を計算し、ノードサイズを調整
-    const tempText = svg
-      .append('text')
-      .text(node.text)
-      .attr('font-size', fontSizeToPx(style.fontSize))
-      .attr('visibility', 'hidden')
-      .attr('x', -9999)
-      .attr('y', -9999);
-    const bbox = (tempText.node() as SVGTextElement).getBBox();
-    tempText.remove();
-    // テキスト幅+パディングでノード幅を自動調整
-    const padding = 24;
-    const minWidth = node.layout.minSize.width;
-    const maxWidth = node.layout.maxSize.width;
-    const newWidth = Math.max(
-      minWidth,
-      Math.min(bbox.width + padding, maxWidth)
-    );
-    node.layout.size.width = newWidth;
-    // ノード内テキスト描画（中央揃え）
-    svg
-      .append('text')
-      .text(node.text)
-      .attr('x', layout.position.x + node.layout.size.width / 2)
-      .attr('y', layout.position.y + layout.size.height / 2)
+    g.append('text')
+      .text(d.text)
+      .attr('x', layout.size.width / 2)
+      .attr('y', layout.size.height / 2)
       .attr('fill', colorToString(style.textColor))
       .attr('font-size', fontSizeToPx(style.fontSize))
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
-      .attr('pointer-events', 'none');
-    // 子ノードも描画
-    node.children.forEach(drawNode);
-  }
-  drawNode(root);
+      .attr('pointer-events', 'none')
+      .attr('opacity', 0)
+      .transition()
+      .duration(300)
+      .attr('opacity', 1);
+  });
+  nodeEnter.transition().duration(300).attr('opacity', 1);
+
+  // --- update ---
+  nodeGroups
+    .transition()
+    .duration(300)
+    .attr(
+      'transform',
+      d => `translate(${d.layout.position.x},${d.layout.position.y})`
+    )
+    .attr('opacity', 1);
+
+  // --- exit ---
+  nodeGroups.exit().transition().duration(300).attr('opacity', 0).remove();
 }
 
 /**
@@ -388,9 +392,7 @@ export function renderMindMapLinks(
       })
     )
     .attr('fill', 'none')
-    .attr('stroke', (d: any) =>
-      linkStyle?.color ? colorToString(linkStyle.color) : '#888'
-    )
+    .attr('stroke', linkStyle?.color ? colorToString(linkStyle.color) : '#888')
     .attr('stroke-width', linkStyle?.strokeWidth || 2)
     .attr('stroke-dasharray', linkStyle?.strokeDasharray || '');
 }
