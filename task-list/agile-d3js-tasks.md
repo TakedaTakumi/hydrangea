@@ -24,7 +24,7 @@
   - [x] 型定義（types/mindmap.ts, types/node.ts）を拡張し、ツリー構造を表現
   - [x] サンプルデータを使ったツリー構築
 - [ ] ノードの基本形状描画（矩形、円形、角丸等）
-  - [ ] SVG 要素でノードを描画（mindmap/mindmap-renderer.ts）
+  - [x] SVG 要素でノードを描画（mindmap/mindmap-renderer.ts）
   - [ ] ノード形状の切り替え（矩形/円形/角丸）
 - [ ] テキスト描画とサイズ調整
   - [ ] ノード内テキストの描画

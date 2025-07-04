@@ -2,6 +2,18 @@
 // SVG キャンバスの初期化・型安全なd3.js統合
 
 import * as d3 from 'd3';
+import type { MindMapNodeTree } from '../types/node';
+import type { RGBAColor, Color } from '../types/index';
+import { NodeShape } from '../types/index';
+
+/**
+ * Color型（HEX or RGBA）→ SVG用カラー文字列
+ */
+function colorToString(color: Color): string {
+  if (typeof color === 'string') return color;
+  const { r, g, b, a } = color as RGBAColor;
+  return `rgba(${r},${g},${b},${a})`;
+}
 
 /**
  * MindMapRenderer: SVGキャンバスの初期化とd3.js描画基盤
@@ -9,7 +21,7 @@ import * as d3 from 'd3';
  * - レスポンシブなSVGサイズ
  */
 export class MindMapRenderer {
-  private svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>;
+  private svg: d3.Selection<SVGSVGElement, unknown, null, undefined>;
   private width: number;
   private height: number;
 
@@ -75,4 +87,71 @@ export class MindMapRenderer {
       node.removeEventListener(type, handler as EventListener);
     }
   }
+}
+
+/**
+ * MindMapNodeTree を SVG で描画（ノード形状: 矩形/円形/角丸/楕円）
+ * @param svg SVG selection
+ * @param root ルートノードツリー
+ */
+export function renderMindMapNodes(
+  svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
+  root: MindMapNodeTree
+) {
+  // 再帰的にノードを描画
+  function drawNode(node: MindMapNodeTree) {
+    const { layout, style } = node;
+    switch (style.shape) {
+      case NodeShape.RECTANGLE:
+        svg
+          .append('rect')
+          .attr('x', layout.position.x)
+          .attr('y', layout.position.y)
+          .attr('width', layout.size.width)
+          .attr('height', layout.size.height)
+          .attr('rx', 0)
+          .attr('fill', colorToString(style.backgroundColor))
+          .attr('stroke', colorToString(style.borderColor))
+          .attr('stroke-width', style.borderWidth);
+        break;
+      case NodeShape.ROUNDED_RECTANGLE:
+        svg
+          .append('rect')
+          .attr('x', layout.position.x)
+          .attr('y', layout.position.y)
+          .attr('width', layout.size.width)
+          .attr('height', layout.size.height)
+          .attr('rx', style.borderRadius)
+          .attr('fill', colorToString(style.backgroundColor))
+          .attr('stroke', colorToString(style.borderColor))
+          .attr('stroke-width', style.borderWidth);
+        break;
+      case NodeShape.CIRCLE:
+        svg
+          .append('circle')
+          .attr('cx', layout.position.x + layout.size.width / 2)
+          .attr('cy', layout.position.y + layout.size.height / 2)
+          .attr('r', Math.min(layout.size.width, layout.size.height) / 2)
+          .attr('fill', colorToString(style.backgroundColor))
+          .attr('stroke', colorToString(style.borderColor))
+          .attr('stroke-width', style.borderWidth);
+        break;
+      case NodeShape.ELLIPSE:
+        svg
+          .append('ellipse')
+          .attr('cx', layout.position.x + layout.size.width / 2)
+          .attr('cy', layout.position.y + layout.size.height / 2)
+          .attr('rx', layout.size.width / 2)
+          .attr('ry', layout.size.height / 2)
+          .attr('fill', colorToString(style.backgroundColor))
+          .attr('stroke', colorToString(style.borderColor))
+          .attr('stroke-width', style.borderWidth);
+        break;
+      default:
+        return;
+    }
+    // 子ノードも描画
+    node.children.forEach(drawNode);
+  }
+  drawNode(root);
 }
