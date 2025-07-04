@@ -12,6 +12,7 @@ import type {
   HexColor,
   RGBAColor,
 } from '../types';
+import type { MindMapNodeTree, MindMapNode } from '../types/node';
 
 // ============================================================================
 // ID生成機能
@@ -686,6 +687,30 @@ export function isLocalStorageAvailable(): boolean {
   } catch {
     return false;
   }
+}
+
+/**
+ * MindMapNodeTree（ツリー構造）を Map<NodeId, MindMapNode> へ変換
+ * childrenIds も正しくセットする
+ */
+export function flattenMindMapTreeToMap(
+  tree: MindMapNodeTree
+): Map<string, MindMapNode> {
+  const map = new Map<string, MindMapNode>();
+  function traverse(node: MindMapNodeTree, parentId: string | null) {
+    // MindMapNode へ変換
+    const { children, ...rest } = node;
+    const childrenIds = children.map(child => child.id);
+    const flatNode: MindMapNode = {
+      ...rest,
+      parentId,
+      childrenIds,
+    };
+    map.set(flatNode.id, flatNode);
+    children.forEach(child => traverse(child, flatNode.id));
+  }
+  traverse(tree, tree.parentId ?? null);
+  return map;
 }
 
 // ============================================================================
