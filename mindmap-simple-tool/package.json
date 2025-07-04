@@ -7,7 +7,7 @@
     "dev": "concurrently \"bun css:watch\" \"bun run --watch src/main.ts\"",
     "css:watch": "bunx tailwindcss -i public/css/input.css -o public/css/output.css --watch",
     "css:build": "bunx tailwindcss -i public/css/input.css -o public/css/output.css --minify",
-    "build": "bun css:build && bun build src/main.ts --outdir dist --minify --splitting --target browser",
+    "build": "bun css:build && bun build src/main.ts --outdir dist --minify --splitting --target browser && cp index.html dist/ && cp -r public dist/",
     "preview": "bun run build && bun serve dist",
     "test": "bun test",
     "test:watch": "bun test --watch",
