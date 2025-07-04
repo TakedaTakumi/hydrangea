@@ -7,6 +7,17 @@ import type { RGBAColor, Color } from '../types/index';
 import { NodeShape } from '../types/index';
 import { getTailwindColor } from '../config/theme';
 import type { MindMapLink } from '../types/mindmap';
+import type { SimulationNodeDatum, SimulationLinkDatum } from 'd3';
+
+// d3-force用型
+interface ForceNode extends SimulationNodeDatum {
+  id: string;
+  data: MindMapNodeTree;
+}
+interface ForceLink extends SimulationLinkDatum<ForceNode> {
+  source: ForceNode | string;
+  target: ForceNode | string;
+}
 
 /**
  * Color型（HEX or RGBA）→ SVG用カラー文字列
@@ -120,25 +131,100 @@ function toD3Hierarchy(
 
 export function renderMindMapNodes(
   svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
-  root: MindMapNodeTree
+  root: MindMapNodeTree,
+  layoutType: 'tree' | 'force' | 'radial' | 'custom' = 'tree'
 ) {
   // SVGサイズ取得
   const svgNode = svg.node();
   const svgWidth = svgNode ? svgNode.clientWidth || 800 : 800;
   const svgHeight = svgNode ? svgNode.clientHeight || 600 : 600;
 
-  // d3-treeレイアウト適用
-  const treeLayout = d3.tree<MindMapNodeTree>().size([svgHeight, svgWidth]);
-  const d3Root = toD3Hierarchy(root);
-  treeLayout(d3Root);
-
-  // d3-treeのx/yをMindMapNodeTreeのlayout.positionに反映
-  d3Root.each(node => {
-    if (typeof node.x === 'number' && typeof node.y === 'number') {
-      node.data.layout.position.x = node.y;
-      node.data.layout.position.y = node.x;
+  if (layoutType === 'force') {
+    // ノードリスト化
+    const nodes: ForceNode[] = [];
+    function collect(node: MindMapNodeTree) {
+      nodes.push({ id: node.id, data: node });
+      node.children.forEach(collect);
     }
-  });
+    collect(root);
+    // id→ForceNodeマップ
+    const nodeMap = new Map(nodes.map(n => [n.id, n]));
+    // リンクリスト化
+    const links: ForceLink[] = [];
+    nodes.forEach(n => {
+      n.data.children.forEach(c => {
+        links.push({ source: n.id, target: c.id });
+      });
+    });
+    // 初期座標
+    nodes.forEach((n, i) => {
+      n.x = svgWidth / 2 + Math.cos((2 * Math.PI * i) / nodes.length) * 120;
+      n.y = svgHeight / 2 + Math.sin((2 * Math.PI * i) / nodes.length) * 120;
+    });
+    // d3-force
+    const sim = d3
+      .forceSimulation(nodes)
+      .force('charge', d3.forceManyBody().strength(-300))
+      .force('center', d3.forceCenter(svgWidth / 2, svgHeight / 2))
+      .force(
+        'link',
+        d3
+          .forceLink(links)
+          .id(d => d.id)
+          .distance(160)
+      )
+      .stop();
+    for (let i = 0; i < 100; ++i) sim.tick();
+    // ForceNodeのx/yをMindMapNodeTreeに反映
+    nodes.forEach(n => {
+      if (typeof n.x === 'number' && typeof n.y === 'number') {
+        n.data.layout.position.x = n.x;
+        n.data.layout.position.y = n.y;
+      }
+    });
+  } else if (layoutType === 'radial') {
+    // d3-treeでツリー構造
+    const treeLayout = d3
+      .tree<MindMapNodeTree>()
+      .size([2 * Math.PI, Math.min(svgWidth, svgHeight) / 2 - 80]);
+    const d3Root = toD3Hierarchy(root);
+    treeLayout(d3Root);
+    // 極座標→デカルト座標変換
+    d3Root.each(node => {
+      if (typeof node.x === 'number' && typeof node.y === 'number') {
+        const angle = node.x - Math.PI / 2;
+        const radius = node.y;
+        node.data.layout.position.x = svgWidth / 2 + Math.cos(angle) * radius;
+        node.data.layout.position.y = svgHeight / 2 + Math.sin(angle) * radius;
+      }
+    });
+  } else if (layoutType === 'custom') {
+    // カスタム: ノードを水平方向に一列で並べる例
+    const nodes: MindMapNodeTree[] = [];
+    function collect(node: MindMapNodeTree) {
+      nodes.push(node);
+      node.children.forEach(collect);
+    }
+    collect(root);
+    const spacing = 180;
+    const startX = (svgWidth - spacing * (nodes.length - 1)) / 2;
+    const y = svgHeight / 2;
+    nodes.forEach((n, i) => {
+      n.layout.position.x = startX + i * spacing;
+      n.layout.position.y = y;
+    });
+  } else {
+    // d3-treeレイアウト適用
+    const treeLayout = d3.tree<MindMapNodeTree>().size([svgHeight, svgWidth]);
+    const d3Root = toD3Hierarchy(root);
+    treeLayout(d3Root);
+    d3Root.each(node => {
+      if (typeof node.x === 'number' && typeof node.y === 'number') {
+        node.data.layout.position.x = node.y;
+        node.data.layout.position.y = node.x;
+      }
+    });
+  }
 
   // 再帰的にノードを描画
   function drawNode(node: MindMapNodeTree) {
