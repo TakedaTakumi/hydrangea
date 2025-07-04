@@ -1,9 +1,9 @@
 // mindmap-canvasのSVGにサンプルツリーを描画するデモスクリプト
-import { sampleMindMapTree } from '../samples/sample-mindmap-tree';
+import { sampleMindMapTree } from '../../samples/sample-mindmap-tree';
 import {
   renderMindMapNodes,
   renderMindMapLinks,
-} from '../src/mindmap/mindmap-renderer';
+} from '../mindmap/mindmap-renderer';
 
 document.addEventListener('DOMContentLoaded', () => {
   const svg = document.getElementById('mindmap-canvas') as SVGSVGElement | null;
