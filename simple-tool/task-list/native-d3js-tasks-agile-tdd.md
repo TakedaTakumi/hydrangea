@@ -49,7 +49,7 @@
 - [x] TypeScript + d3.js の型定義セットアップ
 - [x] Vitest + jsdom によるテスト環境構築
 - [x] Biome の設定
-- [ ] 最初の E2E テスト（Playwright）
+- [x] 最初の E2E テスト（Playwright）
 - [ ] 基本的な HTML テンプレート（index.html）の作成
 - [ ] **静的ファイル生成テスト（`npm run build`の動作確認）**
 - [ ] **デプロイ用ディレクトリ構造の確認**
