@@ -46,7 +46,7 @@
 - [x] package.json, tsconfig.json, vite.config.ts の設定
 - [x] **Vite での静的ファイル生成設定（SSG 対応）**
 - [x] **ビルド最適化設定（バンドルサイズ削減、コード分割）**
-- [ ] TypeScript + d3.js の型定義セットアップ
+- [x] TypeScript + d3.js の型定義セットアップ
 - [ ] Vitest + jsdom によるテスト環境構築
 - [ ] Biome の設定
 - [ ] 最初の E2E テスト（Playwright）
