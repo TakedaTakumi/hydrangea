@@ -47,8 +47,8 @@
 - [x] **Vite での静的ファイル生成設定（SSG 対応）**
 - [x] **ビルド最適化設定（バンドルサイズ削減、コード分割）**
 - [x] TypeScript + d3.js の型定義セットアップ
-- [ ] Vitest + jsdom によるテスト環境構築
-- [ ] Biome の設定
+- [x] Vitest + jsdom によるテスト環境構築
+- [x] Biome の設定
 - [ ] 最初の E2E テスト（Playwright）
 - [ ] 基本的な HTML テンプレート（index.html）の作成
 - [ ] **静的ファイル生成テスト（`npm run build`の動作確認）**
