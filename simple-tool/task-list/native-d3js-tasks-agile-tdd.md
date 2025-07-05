@@ -42,8 +42,8 @@
 **見積もり**: 1-2 日  
 **優先度**: 高
 
-- [ ] プロジェクトディレクトリ構造の作成
-- [ ] package.json, tsconfig.json, vite.config.ts の設定
+- [x] プロジェクトディレクトリ構造の作成
+- [x] package.json, tsconfig.json, vite.config.ts の設定
 - [ ] **Vite での静的ファイル生成設定（SSG 対応）**
 - [ ] **ビルド最適化設定（バンドルサイズ削減、コード分割）**
 - [ ] TypeScript + d3.js の型定義セットアップ
@@ -401,5 +401,3 @@ npx http-server /tmp/webroot
 - **d3.js バンドル**: 必要な機能のみ import
 - **画像最適化**: WebP/AVIF 対応
 - **キャッシュ戦略**: 適切な Cache-Control ヘッダー設定
-
----
