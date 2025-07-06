@@ -18,4 +18,8 @@ export default defineConfig({
   },
   base: "./", // 相対パスでの静的ファイル生成
   publicDir: "public", // 静的アセットのディレクトリ
+  server: {
+    port: 3000,
+    host: "0.0.0.0",
+  },
 });
