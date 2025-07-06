@@ -50,7 +50,7 @@
 - [x] Vitest + jsdom によるテスト環境構築
 - [x] Biome の設定
 - [x] 最初の E2E テスト（Playwright）
-- [ ] 基本的な HTML テンプレート（index.html）の作成
+- [x] 基本的な HTML テンプレート（index.html）の作成
 - [ ] **静的ファイル生成テスト（`npm run build`の動作確認）**
 - [ ] **デプロイ用ディレクトリ構造の確認**
 - [ ] 受け入れ基準：ローカル開発サーバーで index.html が表示される
