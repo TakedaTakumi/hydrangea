@@ -1,3 +1,4 @@
+````instructions
 # GitHub Copilot Instructions - マインドマップ Web ツール開発
 
 ## 基本方針
@@ -454,7 +455,9 @@ export default defineConfig({
 
 ### 静的ファイル生成のテスト戦略
 
-- **ビルド成功テスト**: npm run build の正常実行
+> **注意:** 以下のコマンドは `simple-tool` ディレクトリ内で実行してください。コマンド実行前に必ず `cd simple-tool` でディレクトリを移動してください。
+
+- **ビルド成功テスト**: bun run build の正常実行
 - **静的ファイル整合性テスト**: 生成ファイルの存在確認
 - **相対パステスト**: サブディレクトリでの動作確認
 - **パフォーマンステスト**: バンドルサイズとロード時間測定
@@ -477,9 +480,9 @@ jobs:
         with:
           node-version: 22
       - name: Install dependencies
-        run: npm ci
+        run: bun ci
       - name: Build static files
-        run: npm run build
+        run: bun run build
       - name: Test static files
         run: |
           npx http-server dist &
@@ -493,3 +496,4 @@ jobs:
 ```
 
 ---
+````
