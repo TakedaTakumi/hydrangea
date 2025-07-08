@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>マインドマップ Web ツール</title>
+  <meta name="description" content="シンプルなマインドマップ作成Webツール (TypeScript + d3.js)" />
+  <link rel="icon" href="./assets/favicon.ico" />
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      background: #f8fafc;
+    }
+
+    #app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    header {
+      margin: 2rem 0 1rem;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #2d3748;
+    }
+
+    main {
+      width: 100%;
+      max-width: 900px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <header>マインドマップ Web ツール</header>
+    <main>
+      <svg id="mindmap-canvas" width="800" height="600" style="background:#fff; border:1px solid #e2e8f0;"></svg>
+    </main>
+  </div>
+  <script type="module" src="./src/main.ts"></script>
+</body>
+
+</html>

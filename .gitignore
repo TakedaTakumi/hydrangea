@@ -1,0 +1,16 @@
+node_modules
+bun.lock
+dist
+.vite
+*.log
+.DS_Store
+.env
+.idea
+.vscode
+coverage
+# Playwright
+playwright-report
+# Biome
+biome.json
+# テスト出力
+*.spec.ts.snap
