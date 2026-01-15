@@ -1,50 +1,82 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# hydrangea Constitution
+
+マインドマップ作成Webサービス「Hydrangea」の開発と運営における基本原則
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. ユーザー第一（User-Centric Design）
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+すべての開発決定はユーザー体験を最優先とする。UI/UX は直感的で分かりやすく、マインドマップ作成の作業効率を向上させることが絶対的な要件。ユーザーのフィードバックに基づいて継続的に改善し、機能追加は常にユーザー価値を考慮した上で実施する。
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+**実装要件**:
+- 新機能はユーザーシナリオテストを必須とする
+- デザイン変更は複数のユーザーからのフィードバック検証が必須
+- パフォーマンス低下につながる変更は許可されない
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### II. テスト駆動開発（Test-First Development）
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+テスト駆動開発(TDD)は非交渉の要件である。テスト → 実装の順序で開発を進める。すべての新機能、バグ修正は先にテストが失敗し、その後実装によってテストを成功させる。テストなしのコード変更は受け入れられない。
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+**実装要件**:
+- ユニットテスト: 新しいモジュール、関数は100%の行カバレッジが目標
+- 統合テスト: ユーザーストーリーごとに独立した統合テストが必須
+- E2E テスト: 主要なユーザージャーニーについて E2E テストを実施
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### III. シンプルと明確性（Simplicity & Clarity）
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+YAGNI原則(You Aren't Gonna Need It)に従い、不要な複雑さを排除する。コードは読みやすく、保守性が高いことを優先する。過度な汎用化や先制的なスケーリングは避け、必要になった時点で改善する。
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+**実装要件**:
+- 3 行以上のコメント実装は必須
+- 明確に名付けられた変数、関数、クラスを使用
+- 複雑な実装は justification と一緒にドキュメント化する
+
+### IV. スケーラビリティと パフォーマンス（Scalability & Performance）
+
+マインドマップの規模が増加しても、システムは安定して動作する必要がある。レスポンスタイムは許容範囲内に保つ、メモリ使用量は最適化する。ボトルネック分析と性能テストを定期的に実施。
+
+**実装要件**:
+- 新機能は初期段階でパフォーマンステストを含める
+- p95 レスポンスタイムは 500ms 以下を目標とする
+- メモリ使用量は定期的にモニタリング
+
+### V. 継続的改善（Continuous Improvement）
+
+プロジェクトは常に進化する。ユーザーフィードバック、メトリクス、技術的負債を定期的にレビューし、改善を繰り返す。リリース後の監視とログ分析により、実際の使用パターンから学習する。
+
+**実装要件**:
+- 月次で技術的負債レビューを実施
+- ユーザーからの報告バグは 24 時間以内に確認・分類
+- リリース後 1 週間のモニタリング期間を設定
+
+## Development Workflow
+
+### コード品質ゲート
+
+すべての PR は以下を満たす必要がある：
+- テストが完全に pass している
+- コードレビューで承認されている
+- 既存テストの失敗がないこと
+- 複雑さの増加が正当化されていること（原則 III に沿う）
+
+### 設計と実装のプロセス
+
+1. **企画フェーズ**: ユーザーストーリー定義、受入テスト基準作成
+2. **設計フェーズ**: データモデル、API 設計、テストの実装
+3. **開発フェーズ**: テスト-実装-リファクタの反復
+4. **レビューフェーズ**: コードレビュー、統合テスト確認
+5. **リリースフェーズ**: ステージング環境での最終確認、本番デプロイ
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+プロジェクト憲法はすべての開発活動の基本であり、これらの原則を遵守することを全開発者に要求する。憲法の変更は破壊的なものと非破壊的なものに分けられる。
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+### 修正手順
+
+- **パッチバージョン**: 表現や文言の改善、誤字修正
+- **マイナーバージョン**: 新しい原則の追加、ガイダンスの拡張
+- **メジャーバージョン**: 原則の削除、根本的な再定義
+
+すべての重要な変更は、チーム全体の同意と書面記録が必須となる。修正版の実装ガイダンスは `.github/copilot-instructions.md` および `.specify/templates/` に記載される。
+
+**Version**: 1.0.0 | **Ratified**: 2026-01-15 | **Last Amended**: 2026-01-15
