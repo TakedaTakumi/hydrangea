@@ -1,0 +1,107 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/docker-existing-docker-compose
+{
+	"name": "Hydrangea Dev Container",
+
+	// Update the 'dockerComposeFile' list if you have more compose files or use different names.
+	// The .devcontainer/docker-compose.yml file contains any overrides you need/want to make.
+	"dockerComposeFile": ["../compose.yaml"],
+
+	// The 'service' property is the name of the service for the container that VS Code should
+	// use. Update this value and .devcontainer/docker-compose.yml to the real service name.
+	"service": "spec",
+
+	// The optional 'workspaceFolder' property is the path VS Code should open by default when
+	// connected. This is typically a file mount in .devcontainer/docker-compose.yml
+	"workspaceFolder": "/app",
+	"features": {
+		"ghcr.io/devcontainers/features/copilot-cli:1": {},
+		"ghcr.io/devcontainers/features/git:1": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {}
+	},
+
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Uncomment the next line if you want start specific services in your Docker Compose config.
+	// "runServices": [],
+
+	// Uncomment the next line if you want to keep your containers running after VS Code shuts down.
+	// "shutdownAction": "none",
+
+	// Uncomment the next line to run commands after the container is created.
+	// "postCreateCommand": "cat /etc/os-release",
+
+	// Configure tool-specific properties.
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"editor.insertSpaces": true,
+				"editor.tabSize": 2,
+				"editor.formatOnSave": true,
+				"editor.codeActionsOnSave": {
+					"source.addMissingImports": "explicit",
+					"source.fixAll.eslint": "explicit"
+				},
+				"eslint.validate": ["javascript", "typescript"],
+				"eslint.format.enable": false,
+				"files.autoSave": "afterDelay",
+				"[prettier]": {
+					"editor.defaultFormatter": "esbenp.prettier-vscode"
+				},
+				"[typescript]": {
+					"editor.defaultFormatter": "esbenp.prettier-vscode"
+				},
+				"[javascript]": {
+					"editor.defaultFormatter": "esbenp.prettier-vscode"
+				},
+				"[json]": {
+					"editor.defaultFormatter": "esbenp.prettier-vscode"
+				},
+				"[jsonc]": {
+					"editor.defaultFormatter": "esbenp.prettier-vscode"
+				},
+				"chat.promptFilesRecommendations": {
+					"speckit.constitution": true,
+					"speckit.specify": true,
+					"speckit.plan": true,
+					"speckit.tasks": true,
+					"speckit.implement": true
+				},
+				"chat.tools.terminal.autoApprove": {
+					".specify/scripts/bash/": true,
+					".specify/scripts/powershell/": true
+				}
+			},
+			// cSpell: disable
+			"extensions": [
+				"ms-azuretools.vscode-docker",
+				"oderwat.indent-rainbow",
+				"yzhang.markdown-all-in-one",
+				"shd101wyy.markdown-preview-enhanced",
+				"noy-shimotsuki.hyogai-kanji-checker",
+				"streetsidesoftware.code-spell-checker",
+				"christian-kohler.path-intellisense",
+				"shardulm94.trailing-spaces",
+				"wraith13.background-phi-colors",
+				"mhutchie.git-graph",
+				"GitHub.vscode-pull-request-github",
+				"eamodio.gitlens",
+				"github.copilot-chat",
+				"heaths.vscode-guid",
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode",
+				"ryanluker.vscode-coverage-gutters",
+				"github.vscode-github-actions",
+				"kisstkondoros.vscode-codemetrics"
+			]
+			// cSpell: enable
+		}
+	}
+
+	// Uncomment to connect as an existing user other than the container default. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "devcontainer"
+}

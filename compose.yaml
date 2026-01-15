@@ -1,0 +1,13 @@
+services:
+  spec:
+    build:
+      context: .
+      dockerfile: dockerfile
+    working_dir: /app
+    container_name: spec
+    volumes:
+      - .:/app
+      - ~/.ssh:/home/node/.ssh:ro
+      - ~/.gitconfig:/home/node/.gitconfig:ro
+    stdin_open: true
+    tty: true
