@@ -31,8 +31,7 @@ COPY --chown=${USERNAME}:${USERNAME} package.json pnpm-lock.yaml ./
 
 USER ${USERNAME}
 
-# RUN pnpm config set store-dir /pnpm/store --global
+RUN pnpm config set store-dir /pnpm/store --global
+RUN pnpm install --frozen-lockfile
 
-# RUN pnpm install --frozen-lockfile
-
-# CMD ["/bin/sh", "-c", "pnpm start:dev"]
+CMD ["/bin/sh", "-c", "pnpm run dev"]
