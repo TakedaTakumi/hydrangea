@@ -11,7 +11,8 @@ services:
       - app-node-modules:/app/node_modules
       - ~/.ssh:/home/node/.ssh:ro
       - ~/.gitconfig:/home/node/.gitconfig:ro
+    ports:
+      - "5173:5173"
     tty: true
 volumes:
   app-node-modules:
-  
