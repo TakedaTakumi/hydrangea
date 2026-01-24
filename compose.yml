@@ -1,0 +1,17 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      network: host
+      target: development
+    working_dir: /app
+    volumes:
+      - .:/app
+      - app-node-modules:/app/node_modules
+      - ~/.ssh:/home/node/.ssh:ro
+      - ~/.gitconfig:/home/node/.gitconfig:ro
+    tty: true
+volumes:
+  app-node-modules:
+  
