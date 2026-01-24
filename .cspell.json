@@ -1,0 +1,19 @@
+{
+	"language": "en",
+	"words": ["devcontainer", "reactflow"],
+	"ignoreWords": [],
+	"ignorePaths": [
+		"vscode-extension",
+		".git/objects",
+		".vscode",
+		".vscode-insiders",
+		"node_modules",
+		".pnpm-store",
+		"pnpm-lock.yaml",
+		"doc/*",
+		"dist/*",
+		"prisma/migrations/*",
+		"coverage/*",
+		"generated/*"
+	]
+}
