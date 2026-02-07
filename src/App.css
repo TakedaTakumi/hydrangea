@@ -43,7 +43,7 @@
 /* CustomNode スタイル */
 .custom-node {
   background-color: var(--node-bg);
-  color: var(--text-primary);
+  color: var(--node-text);
   border: 2px solid var(--node-border);
   border-radius: 8px;
   padding: 12px 16px;
@@ -79,7 +79,7 @@
   font-size: 14px;
   box-sizing: border-box;
   background-color: var(--node-bg);
-  color: var(--text-primary);
+  color: var(--node-text);
 }
 
 .custom-node-input:focus {
