@@ -42,8 +42,9 @@
 }
 /* CustomNode スタイル */
 .custom-node {
-  background-color: #fff;
-  border: 2px solid #333;
+  background-color: var(--node-bg);
+  color: var(--text-primary);
+  border: 2px solid var(--node-border);
   border-radius: 8px;
   padding: 12px 16px;
   min-width: 150px;
@@ -66,7 +67,7 @@
 }
 
 .custom-node-label:hover {
-  background-color: #f5f5f5;
+  background-color: var(--node-hover);
 }
 
 .custom-node-input {
@@ -77,10 +78,59 @@
   font-family: system-ui, -apple-system, sans-serif;
   font-size: 14px;
   box-sizing: border-box;
+  background-color: var(--node-bg);
+  color: var(--text-primary);
 }
 
 .custom-node-input:focus {
   outline: none;
   border-color: #004aa3;
   box-shadow: 0 0 0 2px #0066cc33;
+}
+
+/* Toolbar スタイル */
+.toolbar {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+  background-color: var(--toolbar-bg);
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.toolbar-button {
+  padding: 8px 16px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.toolbar-button:hover {
+  opacity: 0.9;
+}
+
+.toolbar-button-add {
+  background-color: #4CAF50;
+}
+
+.toolbar-button-delete {
+  background-color: #f44336;
+}
+
+.toolbar-button-clear {
+  background-color: #ff9800;
+}
+
+.toolbar-button-theme {
+  background-color: #2196F3;
+  padding: 8px 12px;
+  font-size: 16px;
 }

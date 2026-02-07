@@ -14,8 +14,8 @@ type NodeTypes,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import './App.css';
-import type { MindMapData } from './types';
-import { saveToStorage, loadFromStorage, clearStorage } from './storage';
+import type { MindMapData, Theme } from './types';
+import { saveToStorage, loadFromStorage, clearStorage, saveTheme, loadTheme, detectSystemTheme } from './storage';
 import CustomNode from './components/CustomNode';
 
 // ノードタイプ定義
@@ -38,6 +38,7 @@ const initialEdges: Edge[] = [];
 function App() {
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
+  const [theme, setTheme] = useState<Theme>('dark');
 
   // ページ読み込み時にlocalStorageからデータを復元
   useEffect(() => {
@@ -47,6 +48,20 @@ function App() {
       setEdges(savedData.edges);
     }
   }, []);
+
+  // テーマの初期化（保存値またはシステム設定）
+  useEffect(() => {
+    const savedTheme = loadTheme();
+    const initialTheme = savedTheme || detectSystemTheme();
+    setTheme(initialTheme);
+    document.documentElement.setAttribute('data-theme', initialTheme);
+  }, []);
+
+  // テーマ変更時にDOMに反映
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    saveTheme(theme);
+  }, [theme]);
 
   // ノード編集イベントのリスナー
   useEffect(() => {
@@ -128,6 +143,11 @@ function App() {
     }
   }, []);
 
+  // テーマ切り替え
+  const handleToggleTheme = useCallback(() => {
+    setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'));
+  }, []);
+
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
       <ReactFlow
@@ -143,61 +163,31 @@ function App() {
       </ReactFlow>
 
       {/* ツールバー */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 10,
-          left: 10,
-          display: 'flex',
-          gap: 8,
-          zIndex: 10,
-          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-          padding: '10px',
-          borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-        }}
-      >
+      <div className="toolbar">
         <button
           onClick={handleAddNode}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#4CAF50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '14px',
-          }}
+          className="toolbar-button toolbar-button-add"
         >
           ノード追加
         </button>
         <button
           onClick={handleDeleteNode}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#f44336',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '14px',
-          }}
+          className="toolbar-button toolbar-button-delete"
         >
           削除
         </button>
         <button
           onClick={handleClearData}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#ff9800',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '14px',
-          }}
+          className="toolbar-button toolbar-button-clear"
         >
           クリア
+        </button>
+        <button
+          onClick={handleToggleTheme}
+          className="toolbar-button toolbar-button-theme"
+          title={`${theme === 'dark' ? 'ライト' : 'ダーク'}モードに切り替え`}
+        >
+          {theme === 'dark' ? '☀️' : '🌙'}
         </button>
       </div>
     </div>
