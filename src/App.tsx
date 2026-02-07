@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import ReactFlow, {
 type  Node,
 type  Edge,
+type NodeTypes,
   Controls,
   Background,
   applyNodeChanges,
@@ -15,12 +16,18 @@ import 'reactflow/dist/style.css';
 import './App.css';
 import type { MindMapData } from './types';
 import { saveToStorage, loadFromStorage, clearStorage } from './storage';
+import CustomNode from './components/CustomNode';
+
+// ノードタイプ定義
+const nodeTypes: NodeTypes = {
+  custom: CustomNode,
+};
 
 // 初期データ
 const initialNodes: Node[] = [
   {
     id: '1',
-    type: 'default',
+    type: 'custom',
     data: { label: 'ルートノード' },
     position: { x: 250, y: 0 },
   },
@@ -39,6 +46,24 @@ function App() {
       setNodes(savedData.nodes);
       setEdges(savedData.edges);
     }
+  }, []);
+
+  // ノード編集イベントのリスナー
+  useEffect(() => {
+    const handleNodeUpdate = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const { nodeId, newLabel } = customEvent.detail;
+      setNodes((nds) =>
+        nds.map((node) =>
+          node.id === nodeId
+            ? { ...node, data: { ...node.data, label: newLabel } }
+            : node
+        )
+      );
+    };
+
+    window.addEventListener('nodeUpdate', handleNodeUpdate);
+    return () => window.removeEventListener('nodeUpdate', handleNodeUpdate);
   }, []);
 
   // ノードまたはエッジが変更されたときに自動保存
@@ -66,6 +91,7 @@ function App() {
   const handleAddNode = useCallback(() => {
     const newNode: Node = {
       id: `node-${Date.now()}`,
+      type: 'custom',
       data: { label: '新しいノード' },
       position: {
         x: Math.random() * 400 + 100,
@@ -110,6 +136,7 @@ function App() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        nodeTypes={nodeTypes}
       >
         <Controls />
         <Background />
